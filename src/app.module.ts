@@ -15,6 +15,7 @@ import { validationErrorFactory } from './error/validation-error.function';
 import { NextFunction } from 'express';
 import { CampaignModule } from './app/campaign/campaign.module';
 import { CampaignUploadsModule } from './app/campaign-uploads/campaign-uploads.module';
+import { CampaignBudgetModule } from './app/campaign-budget/campaign-budget.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CampaignUploadsModule } from './app/campaign-uploads/campaign-uploads.m
     MongoDatabaseProviderModule,
     CampaignModule,
     CampaignUploadsModule,
+    CampaignBudgetModule,
   ],
   controllers: [AppController],
   providers: [
