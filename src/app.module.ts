@@ -16,6 +16,8 @@ import { NextFunction } from 'express';
 import { CampaignModule } from './app/campaign/campaign.module';
 import { CampaignUploadsModule } from './app/campaign-uploads/campaign-uploads.module';
 import { CampaignBudgetModule } from './app/campaign-budget/campaign-budget.module';
+import { WalletTransactionModule } from './app/wallet-transaction/wallet-transaction.module';
+import { WalletModule } from './app/wallet/wallet.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { CampaignBudgetModule } from './app/campaign-budget/campaign-budget.modu
     CampaignModule,
     CampaignUploadsModule,
     CampaignBudgetModule,
+    WalletTransactionModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [

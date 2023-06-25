@@ -4,10 +4,16 @@ import { User } from 'src/app/user/schemas/user.schema';
 
 export type CampaignDocument = Campaign & Document;
 
+export enum CAMPAIGN_TYPE {
+  PUBLISHED = 'Published',
+  DRAFT = 'Draft',
+  CLOSED = 'Closed',
+}
+
 @Schema({ timestamps: true })
 export class Campaign {
   @Prop({ required: true, ref: User.name, type: mongoose.Types.ObjectId })
-  user: mongoose.Types.ObjectId;
+  creator: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   title: string;
@@ -26,6 +32,9 @@ export class Campaign {
 
   @Prop({ required: true })
   medium: string;
+
+  @Prop({ required: true, default: CAMPAIGN_TYPE.DRAFT, enum: CAMPAIGN_TYPE })
+  status: string;
 }
 
 export const CampaignSchema = SchemaFactory.createForClass(Campaign);
