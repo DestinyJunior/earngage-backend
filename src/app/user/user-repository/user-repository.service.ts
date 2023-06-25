@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ResetPasswordToken } from 'src/app/user/schemas/reset-password-token.schema';
+import { ResetPasswordToken } from 'src/app/user/schemas/authentication-token.schema';
 import {
   User,
   UserDocument,
@@ -98,12 +98,7 @@ export class UserRepositoryService {
   /**
    * Creates a user entity
    */
-  create(
-    user: Pick<
-      User,
-      'email' | 'emailVerified' | 'emailVerificationToken' | 'status'
-    >,
-  ) {
+  create(user: Pick<User, 'email' | 'phoneNumber' | 'status'>) {
     return this.userModel.create(user);
   }
 
@@ -118,11 +113,7 @@ export class UserRepositoryService {
       bio,
       country,
       photo,
-      headerPhoto,
-    }: Pick<
-      User,
-      'firstName' | 'lastName' | 'bio' | 'country' | 'photo' | 'headerPhoto'
-    >,
+    }: Pick<User, 'firstName' | 'lastName' | 'bio' | 'country' | 'photo'>,
   ) {
     return this.userModel
       .updateOne(
@@ -133,7 +124,6 @@ export class UserRepositoryService {
           bio,
           country,
           photo,
-          headerPhoto,
         },
       )
       .exec();

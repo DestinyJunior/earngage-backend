@@ -7,7 +7,7 @@ import { ResetPasswordDto } from 'src/app/auth/dto/reset-password.dto';
 import { EmailingService } from 'src/service/emailing/emailing.service';
 import { HashService } from 'src/service/hash/hash.service';
 import { StringGeneratorService } from 'src/service/string-generator/string-generator.service';
-import { ResetPasswordToken } from 'src/app/user/schemas/reset-password-token.schema';
+import { ResetPasswordToken } from 'src/app/user/schemas/authentication-token.schema';
 import { UserRepositoryService } from 'src/app/user/user-repository/user-repository.service';
 import { AdminRepositoryService } from 'src/app/admin/admin.repository';
 

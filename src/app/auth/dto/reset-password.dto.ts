@@ -5,7 +5,7 @@ import {
   requiredErrorMessage,
   validationErrorMessage,
 } from 'src/error/validation-error.function';
-import { ResetPasswordToken } from 'src/app/user/schemas/reset-password-token.schema';
+import { ResetPasswordToken } from 'src/app/user/schemas/authentication-token.schema';
 import { IsNotExpiredPasswordResetToken } from 'src/app/user/pipes/is-not-expired-password-reset-token.pipe';
 import { IsValidPasswordResetToken } from 'src/app/user/pipes/is-valid-password-reset-token.pipe';
 
