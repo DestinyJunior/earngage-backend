@@ -13,9 +13,10 @@ import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AllExceptionFilter } from './error/all-exception.filter';
 import { validationErrorFactory } from './error/validation-error.function';
 import { NextFunction } from 'express';
+import { CampaignModule } from './app/campaign/campaign.module';
 
 @Module({
-  imports: [ConfigProviderModule, MongoDatabaseProviderModule],
+  imports: [ConfigProviderModule, MongoDatabaseProviderModule, CampaignModule],
   controllers: [AppController],
   providers: [
     AppService,

@@ -18,7 +18,7 @@ export class AuthToken {
 
   static readonly TOKEN_EXPIRES_MINUTES = 10;
 
-  @Prop({ ref: User.name, type: mongoose.Types.ObjectId })
+  @Prop({ required: true, ref: User.name, type: mongoose.Types.ObjectId })
   user: mongoose.Types.ObjectId;
 
   @Prop()

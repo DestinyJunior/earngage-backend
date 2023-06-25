@@ -27,7 +27,4 @@ export class UpdateUserProfile {
 
   @Allow()
   photo: Photo;
-
-  @Allow()
-  headerPhoto: Photo;
 }

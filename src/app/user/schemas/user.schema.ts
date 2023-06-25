@@ -37,6 +37,12 @@ export class User {
   @Prop()
   lastName?: string;
 
+  @Prop()
+  tiktokHandle?: string;
+
+  @Prop()
+  username?: string;
+
   @Prop({ required: true, lowercase: true })
   email: string;
 
