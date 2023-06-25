@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 import { Photo } from 'src/app/file-upload/schemas/photo.schema';
 import { UserType } from './user-type.enum';
 import { PhoneNumberField } from './phone-number.schema';
+import { GenerateOptions } from 'randomstring';
 
 /**
  * Enum of user status
@@ -20,6 +21,12 @@ export type UserDocument = User & Document;
  */
 @Schema({ timestamps: true })
 export class User {
+  static readonly EMAIL_VERIFICATION_TOKEN_CONFIG: GenerateOptions = {
+    length: 5,
+    readable: true,
+    charset: 'number',
+  };
+
   static readonly PHOTO_PATH = 'user/';
 
   id: string;

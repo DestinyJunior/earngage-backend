@@ -10,6 +10,7 @@ import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.
 import { StringGeneratorService } from '../../service/string-generator/string-generator.service';
 import { UpdateUserPhotosDto } from 'src/app/user/dto/update-user-photos.dto';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
+import { AuthToken } from './schemas/authentication-token.schema';
 
 /**
  * Service class that handles user system logic.
@@ -41,28 +42,22 @@ export class UserService {
   /**
    * Handles creating of a user.
    */
-  async create({ email, user }: CreateUserDto) {
-    const emailVerificationToken = await this.generateEmailVerificationToken();
-
+  async create({ email, user, phoneNumber }: CreateUserDto) {
     if (user === null) {
       user = await this.userRepository.create({
         email,
-        emailVerified: false,
-        emailVerificationToken,
+        phoneNumber,
         status: UserStatus.DRAFT,
       });
     }
 
+    // send phone number verification
     // await this.emailingService.sendEmailVerification(
     //   email,
     //   emailVerificationToken,
     // );
 
     return user;
-  }
-
-  findAll() {
-    return `This action returns all user`;
   }
 
   /**
@@ -86,41 +81,10 @@ export class UserService {
   ) {
     const oldPhotoKey = user.photo?.name;
 
-    const oldHeaderPhotoKey = user.headerPhoto?.name;
-
     const photoUploaded =
       photosDto?.photo !== undefined && photosDto.photo.length > 0;
 
-    const headerPhotoUploaded =
-      photosDto?.headerPhoto !== undefined && photosDto.headerPhoto.length > 0;
-
-    // if (photoUploaded) {
-    //   updateUserDto.photo = this.entityMapperService.multerFileToPhoto(
-    //     photosDto.photo[0],
-    //   );
-    // }
-
-    // if (headerPhotoUploaded) {
-    //   updateUserDto.headerPhoto = this.entityMapperService.multerFileToPhoto(
-    //     photosDto.headerPhoto[0],
-    //   );
-    // }
-
     await this.userRepository.update(user.id, updateUserDto);
-
-    // const deletePhotos = [];
-
-    // if (photoUploaded !== undefined && oldPhotoKey !== undefined) {
-    //   deletePhotos.push(this.storageBucketService.deletePhoto(oldPhotoKey));
-    // }
-
-    // if (headerPhotoUploaded !== undefined && oldHeaderPhotoKey !== undefined) {
-    //   deletePhotos.push(
-    //     this.storageBucketService.deletePhoto(oldHeaderPhotoKey),
-    //   );
-    // }
-
-    // await Promise.all(deletePhotos);
 
     return this.userRepository.findById(user.id);
   }
@@ -154,11 +118,11 @@ export class UserService {
   }
 
   /**
-   * Handles user password update.
+   * Handles user auth token update.
    */
-  async updatePassword(user: User, password: string) {
-    password = await this.hashService.hashPassword(password);
-    await this.userRepository.updatePassword(user.id, password);
+  async updateAuthToken(user: User, authToken: AuthToken) {
+    authToken.token = await this.hashService.hashString(authToken.token);
+    await this.userRepository.updateAuthTokenByUser(user.id, authToken);
     return this.userRepository.findById(user.id);
   }
 

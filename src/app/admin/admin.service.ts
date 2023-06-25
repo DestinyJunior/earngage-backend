@@ -22,7 +22,7 @@ export class AdminService {
    * Handles creating of an admin.
    */
   async create(createAdminDto: CreateAdminDto) {
-    createAdminDto.password = await this.hashService.hashPassword(
+    createAdminDto.password = await this.hashService.hashString(
       createAdminDto.password,
     );
 
@@ -80,7 +80,7 @@ export class AdminService {
    * Handles admin password update.
    */
   async updatePassword(admin: Admin, password: string) {
-    password = await this.hashService.hashPassword(password);
+    password = await this.hashService.hashString(password);
     await this.adminRepository.updatePassword(admin.id, password);
     return this.adminRepository.findById(admin.id);
   }

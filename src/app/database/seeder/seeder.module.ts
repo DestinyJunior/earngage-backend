@@ -1,8 +1,8 @@
 import { Logger, Module } from '@nestjs/common';
-import { ConfigProviderModule } from 'src/providers/app/config-provider.module';
-import { DatabaseProviderModule } from 'src/providers/database/database-provider.module';
 import { AdminSeederModule } from './admin/admin-seeder.module';
 import { Seeder } from './seeder';
+import { ConfigProviderModule } from 'src/provider/config.provider';
+import { MongoDatabaseProviderModule } from 'src/provider/db/mongo-provider.module';
 
 /**
  * Import and provide seeder classes.
@@ -10,7 +10,11 @@ import { Seeder } from './seeder';
  * @module
  */
 @Module({
-  imports: [ConfigProviderModule, DatabaseProviderModule, AdminSeederModule],
+  imports: [
+    ConfigProviderModule,
+    MongoDatabaseProviderModule,
+    AdminSeederModule,
+  ],
   providers: [Logger, Seeder],
 })
 export class SeederModule {}

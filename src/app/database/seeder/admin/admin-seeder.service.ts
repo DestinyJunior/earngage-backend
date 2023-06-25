@@ -37,7 +37,7 @@ export class AdminSeederService {
           if (dbAdmin) {
             return Promise.resolve(null);
           }
-          admin.password = await this.hashService.hashPassword(admin.password);
+          admin.password = await this.hashService.hashString(admin.password);
           return Promise.resolve(await this.adminRepository.create(admin));
         })
         .catch((error) => Promise.reject(error));

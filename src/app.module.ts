@@ -1,6 +1,8 @@
 import {
   ClassSerializerInterceptor,
+  MiddlewareConsumer,
   Module,
+  RequestMethod,
   ValidationPipe,
 } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -10,6 +12,7 @@ import { MongoDatabaseProviderModule } from './provider/db/mongo-provider.module
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AllExceptionFilter } from './error/all-exception.filter';
 import { validationErrorFactory } from './error/validation-error.function';
+import { NextFunction } from 'express';
 
 @Module({
   imports: [ConfigProviderModule, MongoDatabaseProviderModule],
@@ -37,4 +40,16 @@ import { validationErrorFactory } from './error/validation-error.function';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  /**
+   * Adds the data property to the request object.
+   */
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply((req: Request, res: Response, next: NextFunction) => {
+        req['data'] = {} as any;
+        next();
+      })
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

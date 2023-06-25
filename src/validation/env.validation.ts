@@ -1,11 +1,10 @@
-import { Logger } from '@nestjs/common';
+import { Logger, Optional } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsUrl,
   validateSync,
 } from 'class-validator';
 import { ERROR_CODE } from 'src/error/error-code.constants';
@@ -27,7 +26,7 @@ class EnvironmentVariables {
   @IsNumber()
   PORT: number;
 
-  @IsNotEmpty()
+  @Optional()
   DB_HOST: string;
 
   @IsNumber(
@@ -37,42 +36,23 @@ class EnvironmentVariables {
       ERROR_CODE.FIELD_INVALID,
     ),
   )
-  @IsNotEmpty()
+  @Optional()
   DB_PORT: number;
 
-  @IsNotEmpty()
+  @Optional()
   DB_USERNAME: string;
 
-  @IsNotEmpty()
+  @Optional()
   DB_PASSWORD: string;
 
-  @IsNotEmpty()
+  @Optional()
   DB_NAME: string;
 
   @IsOptional()
   DB_URL: string;
 
   @IsNotEmpty()
-  STRIPE_SECRET_KEY: string;
-
-  @IsNotEmpty()
-  STRIPE_WEBHOOK_KEY: string;
-
-  @IsNotEmpty()
-  @IsUrl()
-  CONNECT_REFRESH_URL: string;
-
-  @IsNotEmpty()
-  @IsUrl()
-  CONNECT_RETURN_URL: string;
-
-  @IsNotEmpty()
-  FLW_PUBLIC_KEY: string;
-
-  @IsNotEmpty()
-  FLW_SECRET_KEY: string;
-
-  FLW_ENC_KEY: string;
+  DATABASE_URL: string;
 }
 
 export function validate(config: Record<string, unknown>) {

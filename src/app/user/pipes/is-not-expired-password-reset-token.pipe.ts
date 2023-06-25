@@ -18,12 +18,12 @@ export class IsNotExpiredPasswordResetTokenPipe
   constructor(private readonly userRepository: UserRepositoryService) {}
 
   async validate(token: string) {
-    const user = await this.userRepository.findByResetPasswordToken(token);
+    const authToken = await this.userRepository.findAuthTokenByUser(token);
 
     return (
-      user !== null &&
-      !user.resetPasswordToken.used &&
-      user?.resetPasswordToken.expiresAt.getTime() > Date.now()
+      authToken !== null &&
+      !authToken.used &&
+      authToken.expiresAt.getTime() > Date.now()
     );
   }
 }

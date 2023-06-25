@@ -25,7 +25,7 @@ export class IsValidAdminPasswordPipe implements ValidatorConstraintInterface {
       return false;
     }
 
-    return this.hashService.comparePassword(password, admin.password);
+    return this.hashService.compareString(password, admin.password);
   }
 }
 

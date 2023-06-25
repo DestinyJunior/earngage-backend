@@ -3,11 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { Admin } from 'src/app/admin/schemas/admin.schema';
 import { User } from 'src/app/user/schemas/user.schema';
 import { JwtPayload } from 'src/app/auth/dto/jwt-payload.type';
-import { ResetPasswordDto } from 'src/app/auth/dto/reset-password.dto';
 import { EmailingService } from 'src/service/emailing/emailing.service';
 import { HashService } from 'src/service/hash/hash.service';
 import { StringGeneratorService } from 'src/service/string-generator/string-generator.service';
-import { ResetPasswordToken } from 'src/app/user/schemas/authentication-token.schema';
+import { AuthToken } from 'src/app/user/schemas/authentication-token.schema';
 import { UserRepositoryService } from 'src/app/user/user-repository/user-repository.service';
 import { AdminRepositoryService } from 'src/app/admin/admin.repository';
 
@@ -26,14 +25,16 @@ export class AuthService {
   ) {}
 
   /**
-   * handles verification of login email & password
+   * handles verification of login email & auth token token
    */
-  async verifyPasswordAuth(email: string, password: string) {
+  async verifyPasswordAuth(email: string, token: string) {
     const user = await this.userRepository.findByEmail(email);
+    const authToken = await this.userRepository.findAuthTokenByUser(user._id);
 
     if (
       user !== null &&
-      (await this.hashService.comparePassword(password, user.password))
+      authToken != null &&
+      (await this.hashService.compareString(token, authToken.token))
     ) {
       return user;
     }
@@ -59,7 +60,7 @@ export class AuthService {
 
     if (
       admin !== null &&
-      (await this.hashService.comparePassword(password, admin.password))
+      (await this.hashService.compareString(password, admin.password))
     ) {
       return admin;
     }
@@ -100,53 +101,32 @@ export class AuthService {
   /**
    * handles generation and sending of reset password token.
    */
-  async forgotPassword(email: string) {
+  async resendAuthToken(email: string) {
     const user = await this.userRepository.findByEmail(email);
 
     const expireDate = new Date();
 
     expireDate.setMinutes(
-      expireDate.getMinutes() + ResetPasswordToken.TOKEN_EXPIRES_MINUTES,
+      expireDate.getMinutes() + AuthToken.TOKEN_EXPIRES_MINUTES,
     );
 
     const token = await this.stringGeneratorService
       .setExists(
-        this.userRepository.existsByResetPasswordToken.bind(
-          this.userRepository,
-        ),
+        this.userRepository.existsAuthTokenByUser.bind(this.userRepository),
       )
-      .generate(ResetPasswordToken.TOKEN_CONFIG);
+      .generate(AuthToken.TOKEN_CONFIG);
 
-    await this.userRepository.updateResetPasswordToken(user.id, {
+    await this.userRepository.updateAuthTokenByUser(user.id, {
       token,
       used: false,
       expiresAt: expireDate,
     });
 
+    // TODO: send new email
     // await this.emailingService.sendEmailText(
     //   email,
     //   token,
     //   ResetPasswordToken.TOKEN_EXPIRES_MINUTES,
     // );
-  }
-
-  /**
-   * handles reset of password user password.
-   */
-  async resetPassword({ password, passwordResetToken }: ResetPasswordDto) {
-    const user = await this.userRepository.findByResetPasswordToken(
-      passwordResetToken,
-    );
-
-    password = await this.hashService.hashPassword(password);
-
-    await this.userRepository.updatePassword(user.id, password);
-
-    user.resetPasswordToken.used = true;
-
-    await this.userRepository.updateResetPasswordToken(
-      user.id,
-      user.resetPasswordToken,
-    );
   }
 }

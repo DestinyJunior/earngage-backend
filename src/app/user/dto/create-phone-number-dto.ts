@@ -2,7 +2,7 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { requiredErrorMessage } from 'src/error/validation-error.function';
 
-class CountryValidator {
+export class CreateCountryDto {
   @IsNotEmpty(requiredErrorMessage())
   name: string;
 
@@ -10,7 +10,7 @@ class CountryValidator {
   shortCode: string;
 }
 
-class PhoneValidator {
+export class CreatePhoneNumberDto {
   @IsNotEmpty(requiredErrorMessage())
   code: string;
 
@@ -18,8 +18,6 @@ class PhoneValidator {
   number: string;
 
   @ValidateNested()
-  @Type(() => CountryValidator)
-  country: CountryValidator;
+  @Type(() => CreateCountryDto)
+  country: CreateCountryDto;
 }
-
-export { CountryValidator, PhoneValidator };

@@ -29,7 +29,7 @@ export class IsValidPasswordPipe implements ValidatorConstraintInterface {
       return false;
     }
 
-    return this.hashService.comparePassword(password, user.password);
+    return this.hashService.compareString(password, user.password);
   }
 }
 

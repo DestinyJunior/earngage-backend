@@ -1,6 +1,6 @@
 import { Prop } from '@nestjs/mongoose';
 
-class Country {
+export class Country {
   @Prop({ required: true })
   name: string;
 
@@ -8,7 +8,7 @@ class Country {
   shortCode: string;
 }
 
-class PhoneNumberField {
+export class PhoneNumberField {
   @Prop({ required: true })
   code: string;
 
@@ -18,5 +18,3 @@ class PhoneNumberField {
   @Prop({ required: true })
   country: Country;
 }
-
-export { PhoneNumberField, Country };

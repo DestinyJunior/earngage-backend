@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { Admin } from 'src/app/admin/schemas/admin.schema';
 import { CreateForgotPasswordDto } from 'src/app/auth/dto/create-forgot-password.dto';
-import { ResetPasswordDto } from 'src/app/auth/dto/reset-password.dto';
 import { LocalAdminAuthGuard } from 'src/app/auth/guards/local-admin-auth.guard';
 import { LocalAuthGuard } from 'src/app/auth/guards/local-auth.guard';
 import { LocalEmailTokenAuthGuard } from 'src/app/auth/guards/local-email-token-auth.guard';
@@ -57,27 +56,5 @@ export class AuthController {
   async emailVerificationToken(@UserParam() user: User) {
     const accessToken = await this.authService.getAccessToken(user);
     return ResponseDto.success('User authenticated', accessToken);
-  }
-
-  /**
-   * Handles forgot password request.
-   */
-  @HttpCode(HttpStatus.OK)
-  @Post('forgot-password')
-  async forgotPassword(
-    @Body() createForgotPasswordDto: CreateForgotPasswordDto,
-  ) {
-    await this.authService.forgotPassword(createForgotPasswordDto.email);
-    return ResponseDto.success('Forgot password created');
-  }
-
-  /**
-   * Handles reset password request.
-   */
-  @HttpCode(HttpStatus.OK)
-  @Post('reset-password')
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-    await this.authService.resetPassword(resetPasswordDto);
-    return ResponseDto.success('Reset password complete');
   }
 }

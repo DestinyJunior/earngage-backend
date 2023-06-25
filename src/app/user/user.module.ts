@@ -18,6 +18,10 @@ import { IsValidEmailPipe } from 'src/app/user/pipes/is-valid-email.pipe';
 import { IsValidPasswordResetTokenPipe } from 'src/app/user/pipes/is-valid-password-reset-token.pipe';
 import { IsNotExpiredPasswordResetTokenPipe } from 'src/app/user/pipes/is-not-expired-password-reset-token.pipe';
 import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.service';
+import {
+  AuthToken,
+  AuthTokenSchema,
+} from './schemas/authentication-token.schema';
 
 /**
  * User module configurations.
@@ -34,7 +38,10 @@ import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.
       }),
     }),
     PermissionModule,
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: AuthToken.name, schema: AuthTokenSchema },
+    ]),
   ],
   controllers: [UserController],
   providers: [

@@ -18,7 +18,7 @@ export class IsValidPasswordResetTokenPipe
   constructor(private readonly userRepository: UserRepositoryService) {}
 
   validate(token: string) {
-    return this.userRepository.existsByResetPasswordToken(token);
+    return this.userRepository.existsAuthTokenByUser(token);
   }
 }
 

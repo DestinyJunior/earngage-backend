@@ -1,16 +1,18 @@
-import { Prop } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { GenerateOptions } from 'randomstring';
 import { User } from './user.schema';
 
+export type AuthTokenDocument = AuthToken & Document;
+
 /**
- * Reset password token entity
+ * authentication token entity
  */
-export class ResetPasswordToken {
+@Schema({ timestamps: true })
+export class AuthToken {
   static readonly TOKEN_CONFIG: GenerateOptions = {
     length: 5,
     readable: true,
-    capitalization: 'uppercase',
     charset: 'number',
   };
 
@@ -28,3 +30,5 @@ export class ResetPasswordToken {
   @Prop({ type: Boolean, default: false })
   used: boolean;
 }
+
+export const AuthTokenSchema = SchemaFactory.createForClass(AuthToken);

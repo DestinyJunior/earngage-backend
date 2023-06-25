@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { ResetPasswordToken } from 'src/app/user/schemas/authentication-token.schema';
+import mongoose, { Model } from 'mongoose';
+import {
+  AuthToken,
+  AuthTokenDocument,
+} from 'src/app/user/schemas/authentication-token.schema';
 import {
   User,
   UserDocument,
@@ -13,7 +16,11 @@ import {
  */
 @Injectable()
 export class UserRepositoryService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(AuthToken.name)
+    private authTokenModel: Model<AuthTokenDocument>,
+  ) {}
 
   /**
    * Checks if a user entity with an email exists.
@@ -38,13 +45,13 @@ export class UserRepositoryService {
   }
 
   /**
-   * Checks if a user entity with a password reset token exists.
+   * Checks if a user entity with a auth reset token exists.
    */
-  async existsByResetPasswordToken(token: string) {
-    const user = await this.userModel
-      .findOne({ 'resetPasswordToken.token': token })
+  async existsAuthTokenByUser(userId: string) {
+    const token = await this.authTokenModel
+      .findOne({ user: new mongoose.Types.ObjectId(userId) })
       .exec();
-    return user !== null;
+    return token !== null;
   }
 
   /**
@@ -89,10 +96,19 @@ export class UserRepositoryService {
   }
 
   /**
-   * Finds a user entity with a reset password token
+   * Finds a user entity auth token
    */
-  findByResetPasswordToken(token: string) {
-    return this.userModel.findOne({ 'resetPasswordToken.token': token }).exec();
+  findAuthTokenByUser(userId: string) {
+    return this.authTokenModel
+      .findOne({ user: new mongoose.Types.ObjectId(userId) })
+      .exec();
+  }
+
+  /**
+   * Create a user auth token
+   */
+  createAuthToken(authToken: AuthToken) {
+    return this.authTokenModel.create(authToken);
   }
 
   /**
@@ -149,13 +165,6 @@ export class UserRepositoryService {
   }
 
   /**
-   * Updates a user entity password
-   */
-  updatePassword(_id: string, password: string) {
-    return this.userModel.updateOne({ _id }, { password }).exec();
-  }
-
-  /**
    * Updates a user entity status
    */
   updateStatus(_id: string, status: UserStatus) {
@@ -172,10 +181,12 @@ export class UserRepositoryService {
   /**
    * Updates a user entity reset password token
    */
-  updateResetPasswordToken(
-    _id: string,
-    resetPasswordToken: ResetPasswordToken,
+  updateAuthTokenByUser(
+    userId: string,
+    authTokenData: Pick<AuthToken, 'token' | 'expiresAt' | 'used'>,
   ) {
-    return this.userModel.updateOne({ _id }, { resetPasswordToken }).exec();
+    return this.authTokenModel
+      .updateOne({ user: new mongoose.Types.ObjectId(userId) }, authTokenData)
+      .exec();
   }
 }

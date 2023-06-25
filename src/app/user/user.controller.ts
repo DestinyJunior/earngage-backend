@@ -56,11 +56,6 @@ export class UserController {
     );
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
   /**
    * Handles fetching a user using the users id.
    */
@@ -122,26 +117,26 @@ export class UserController {
     );
   }
 
-  /**
-   * Handles user password update.
-   */
-  @Put('password')
-  @UseGuards(UserExistsGuard, JwtAuthGuard, UpdatePasswordPermissionGuard)
-  @UseInterceptors(InjectRequestIntoValidationInterceptor)
-  async updatePassword(
-    @UserParam() user: User,
-    @Body() userUpdateDto: UpdateUserPasswordDto,
-  ) {
-    const updatedUser = await this.userService.updatePassword(
-      user,
-      userUpdateDto.password,
-    );
+  // /**
+  //  * Handles user password update.
+  //  */
+  // @Put('password')
+  // @UseGuards(UserExistsGuard, JwtAuthGuard, UpdatePasswordPermissionGuard)
+  // @UseInterceptors(InjectRequestIntoValidationInterceptor)
+  // async updatePassword(
+  //   @UserParam() user: User,
+  //   @Body() userUpdateDto: UpdateUserPasswordDto,
+  // ) {
+  //   const updatedUser = await this.userService.updateAuthToken(
+  //     user,
+  //     userUpdateDto.,
+  //   );
 
-    return ResponseDto.success(
-      'User password updated',
-      this.entityMapperService.entityToDto(UserDto, updatedUser),
-    );
-  }
+  //   return ResponseDto.success(
+  //     'User password updated',
+  //     this.entityMapperService.entityToDto(UserDto, updatedUser),
+  //   );
+  // }
 
   /**
    * Handles update of user email.

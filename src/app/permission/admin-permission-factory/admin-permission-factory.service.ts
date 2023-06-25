@@ -10,10 +10,6 @@ import { AdminRole } from 'src/app/admin/schemas/admin-role.enum';
 import { PermissionAction } from 'src/app/permission/permission-action.enum';
 import { User } from 'src/app/user/schemas/user.schema';
 import { Admin } from 'src/app/admin/schemas/admin.schema';
-import { BecomeAPartner } from 'src/app/partner/schemas/partner.schema';
-import { BootcampRegistration } from 'src/app/bootcamp-registration/schemas/bootcamp-registration.schema';
-import { Bootcamp } from 'src/app/bootcamp/schemas/bootcamp.schema';
-
 @Injectable()
 export class AdminPermissionFactoryService {
   create(admin: Admin) {
@@ -32,27 +28,27 @@ export class AdminPermissionFactoryService {
 
     can(PermissionAction.Manage, User);
 
-    can(PermissionAction.Manage, BecomeAPartner);
+    // can(PermissionAction.Manage, BecomeAPartner);
 
     if (admin.role === AdminRole.SUPER_ADMIN) {
       can(PermissionAction.Create, Admin);
-      can(
-        [
-          PermissionAction.Create,
-          PermissionAction.Delete,
-          PermissionAction.Update,
-        ],
-        Bootcamp,
-      );
+      // can(
+      //   [
+      //     PermissionAction.Create,
+      //     PermissionAction.Delete,
+      //     PermissionAction.Update,
+      //   ],
+      //   Bootcamp,
+      // );
 
-      can(
-        [
-          PermissionAction.Read,
-          PermissionAction.ReadOne,
-          PermissionAction.Update,
-        ],
-        BootcampRegistration,
-      );
+      // can(
+      //   [
+      //     PermissionAction.Read,
+      //     PermissionAction.ReadOne,
+      //     PermissionAction.Update,
+      //   ],
+      //   BootcampRegistration,
+      // );
     }
 
     return build({
