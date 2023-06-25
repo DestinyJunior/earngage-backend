@@ -11,7 +11,7 @@ declare namespace Express {
     data: {
       user: import('./app/user/schemas/user.schema').UserDocument;
       admin: import('./app/admin/schemas/admin.schema').AdminDocument;
-      media: import('./app/file-upload/schemas/photo.schema').PhotoDocument;
+      media: import('./app/file-upload/schemas/file.schema').PhotoDocument;
     };
   }
 }

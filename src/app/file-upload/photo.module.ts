@@ -9,7 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.service';
 import { StringGeneratorService } from 'src/service/string-generator/string-generator.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Photo, FileSchema } from './schemas/photo.schema';
+import { Photo, FileSchema } from './schemas/file.schema';
 import { FileService } from './file.service';
 
 type PhotoUploadAsyncOptions = {

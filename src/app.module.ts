@@ -14,9 +14,15 @@ import { AllExceptionFilter } from './error/all-exception.filter';
 import { validationErrorFactory } from './error/validation-error.function';
 import { NextFunction } from 'express';
 import { CampaignModule } from './app/campaign/campaign.module';
+import { CampaignUploadsModule } from './app/campaign-uploads/campaign-uploads.module';
 
 @Module({
-  imports: [ConfigProviderModule, MongoDatabaseProviderModule, CampaignModule],
+  imports: [
+    ConfigProviderModule,
+    MongoDatabaseProviderModule,
+    CampaignModule,
+    CampaignUploadsModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

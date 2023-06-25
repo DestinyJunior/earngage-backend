@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
-import { Photo } from 'src/app/file-upload/schemas/photo.schema';
+import { Photo } from 'src/app/file-upload/schemas/file.schema';
 
 /**
  * Service for mapping objects.

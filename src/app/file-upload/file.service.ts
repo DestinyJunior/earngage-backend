@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FileDocument, Photo } from './schemas/photo.schema';
+import { MediaFileDocument, MediaFile } from './schemas/file.schema';
 import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class FileService {
   constructor(
-    @InjectModel(Photo.name) private FileModel: Model<FileDocument>,
+    @InjectModel(MediaFile.name) private FileModel: Model<MediaFileDocument>,
   ) {}
 
-  async create(data: Photo) {
+  async create(data: MediaFile) {
     return await this.FileModel.create(data);
   }
 
@@ -21,7 +21,7 @@ export class FileService {
     return await this.FileModel.findOne({ _id: id });
   }
 
-  async updateOne(id: Types.ObjectId, data: Photo) {
+  async updateOne(id: Types.ObjectId, data: MediaFile) {
     return await this.FileModel.findByIdAndUpdate(id, data);
   }
 

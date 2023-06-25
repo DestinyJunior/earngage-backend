@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { AdminRole } from 'src/app/admin/schemas/admin-role.enum';
-import { Photo } from 'src/app/file-upload/schemas/photo.schema';
+import { Photo } from 'src/app/file-upload/schemas/file.schema';
 
 export type AdminDocument = Admin & Document;
 

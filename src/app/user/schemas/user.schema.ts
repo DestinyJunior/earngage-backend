@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Photo } from 'src/app/file-upload/schemas/photo.schema';
+import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
 import { UserType } from './user-type.enum';
 import { PhoneNumberField } from './phone-number.schema';
 import { GenerateOptions } from 'randomstring';
@@ -70,8 +70,8 @@ export class User {
   @Prop()
   country?: string;
 
-  @Prop({ type: Photo })
-  photo?: Photo;
+  @Prop({ type: MediaFile })
+  photo?: MediaFile;
 
   @Prop({ default: UserType.INFLUENCER })
   role: UserType;

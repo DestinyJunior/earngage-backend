@@ -3,7 +3,7 @@ import {
   invalidErrorMessage,
   requiredErrorMessage,
 } from 'src/error/validation-error.function';
-import { Photo } from 'src/app/file-upload/schemas/photo.schema';
+import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
 /**
  * Dto for updating a user data
  */
@@ -26,5 +26,5 @@ export class UpdateUserProfile {
   country?: string;
 
   @Allow()
-  photo: Photo;
+  photo: MediaFile;
 }
