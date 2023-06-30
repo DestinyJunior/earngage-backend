@@ -18,6 +18,10 @@ import { CampaignUploadsModule } from './app/campaign-uploads/campaign-uploads.m
 import { CampaignBudgetModule } from './app/campaign-budget/campaign-budget.module';
 import { WalletTransactionModule } from './app/wallet-transaction/wallet-transaction.module';
 import { WalletModule } from './app/wallet/wallet.module';
+import { S3StorageBucketService } from './service/storage-bucket/s3.storage-bucket.service';
+import { EmailingService } from './service/emailing/emailing.service';
+import { HashService } from './service/hash/hash.service';
+import { EntityMapperService } from './service/entity-mapper/entity-mapper.service';
 
 @Module({
   imports: [
@@ -51,6 +55,9 @@ import { WalletModule } from './app/wallet/wallet.module';
           exceptionFactory: validationErrorFactory,
         }),
     },
+    S3StorageBucketService,
+    HashService,
+    EntityMapperService,
   ],
 })
 export class AppModule {

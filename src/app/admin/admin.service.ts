@@ -3,7 +3,7 @@ import { AdminRepositoryService } from 'src/app/admin/admin.repository';
 import { AdminRole } from 'src/app/admin/schemas/admin-role.enum';
 import { Admin } from 'src/app/admin/schemas/admin.schema';
 import { HashService } from 'src/service/hash/hash.service';
-import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.service';
+import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
@@ -15,7 +15,7 @@ export class AdminService {
   constructor(
     private readonly hashService: HashService,
     private readonly adminRepository: AdminRepositoryService,
-    private readonly storageBucketService: StorageBucketService,
+    private readonly s3StorageBucketService: S3StorageBucketService,
   ) {}
 
   /**

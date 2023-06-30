@@ -9,8 +9,8 @@ import { HashService } from 'src/service/hash/hash.service';
 import { IsUniqueAdminEmailPipe } from 'src/app/admin/pipes/is-unique-admin-email.pipe';
 import { PermissionModule } from 'src/app/permission/permission.module';
 import { ConfigModule } from '@nestjs/config';
-import { PhotoModule } from 'src/app/file-upload/photo.module';
-import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.service';
+import { PhotoModule } from 'src/app/file-upload/file.module';
+import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
 import { IsValidAdminPasswordPipe } from 'src/app/admin/pipes/is-valid-admin-password.pipe';
 
 /**
@@ -38,7 +38,7 @@ import { IsValidAdminPasswordPipe } from 'src/app/admin/pipes/is-valid-admin-pas
     IsValidAdminPasswordPipe,
     HashService,
     EntityMapperService,
-    StorageBucketService,
+    S3StorageBucketService,
   ],
   exports: [AdminRepositoryService],
 })

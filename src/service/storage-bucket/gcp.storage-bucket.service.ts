@@ -7,9 +7,9 @@ import { StorageFile } from './storage.file';
  * Service for managing files in the storage bucket.
  */
 @Injectable()
-export class StorageBucketService {
+export class GcpStorageBucketService {
   static readonly FILE_PATH = 'files/';
-  static readonly PHOTO_PATH = StorageBucketService.FILE_PATH + 'images/';
+  static readonly PHOTO_PATH = GcpStorageBucketService.FILE_PATH + 'images/';
 
   private storage: Storage;
   private bucket: string;

@@ -10,9 +10,9 @@ interface IAdmin {
 
 export const admins: IAdmin[] = [
   {
-    firstName: 'Niyo',
-    lastName: 'destiny',
-    email: 'superadmin@niyo.co',
+    firstName: 'Earngage',
+    lastName: 'Admin',
+    email: 'superadmin@getearngage.com',
     role: AdminRole.SUPER_ADMIN,
     password: 'admin@123',
   },

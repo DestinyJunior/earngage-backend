@@ -3,16 +3,16 @@ import {
   MulterModuleOptions,
   MulterOptionsFactory,
 } from '@nestjs/platform-express';
-// import { extname } from 'path';
+import * as multerS3 from 'multer-s3';
+import { extname } from 'path';
 import { ERROR_CODE } from 'src/error/error-code.constants';
 import {
   createValidationError,
   validationErrorFactory,
 } from 'src/error/validation-error.function';
-// import { Photo } from 'src/app/file-upload/schemas/photo.schema';
-import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.service';
+import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
 import { StringGeneratorService } from 'src/service/string-generator/string-generator.service';
-// import multer from 'multer';
+import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
 
 export type PhotoUploadOptions = {
   namePrefix: string;
@@ -29,7 +29,7 @@ export class MulterConfigService implements MulterOptionsFactory {
   constructor(
     @Inject(PHOTO_UPLOAD_OPTIONS)
     private readonly uploadOptions: PhotoUploadOptions,
-    private readonly storageService: StorageBucketService,
+    private readonly s3StorageService: S3StorageBucketService,
     private readonly stringGeneratorService: StringGeneratorService,
   ) {}
 
@@ -53,32 +53,32 @@ export class MulterConfigService implements MulterOptionsFactory {
         }
       },
 
-      // storage: multer({
-      //   ...this.storageService.getSavePhotoParams(),
+      storage: multerS3({
+        ...this.s3StorageService.getSavePhotoParams(),
 
-      //   contentType: multer.AUTO_CONTENT_TYPE,
+        contentType: multerS3.AUTO_CONTENT_TYPE,
 
-      //   metadata(req, file, cb) {
-      //     cb(null, { fieldName: file.fieldname });
-      //   },
+        metadata(req, file, cb) {
+          cb(null, { fieldName: file.fieldname });
+        },
 
-      //   key: async (req, file, cb) => {
-      //     try {
-      //       const fileKey = await this.stringGeneratorService
-      //         .setExists(this.uploadOptions.nameExists)
-      //         .generate(
-      //           Photo.NAME_CONFIG,
-      //           true,
-      //           `${StorageBucketService.PHOTO_PATH}${this.uploadOptions.namePrefix}`,
-      //           extname(file.originalname),
-      //         );
+        key: async (req, file, cb) => {
+          try {
+            const fileKey = await this.stringGeneratorService
+              .setExists(this.uploadOptions.nameExists)
+              .generate(
+                MediaFile.NAME_CONFIG,
+                true,
+                `${S3StorageBucketService.PHOTO_PATH}${this.uploadOptions.namePrefix}`,
+                extname(file.originalname),
+              );
 
-      //       cb(null, fileKey);
-      //     } catch (error) {
-      //       cb(error, null);
-      //     }
-      //   },
-      // }),
+            cb(null, fileKey);
+          } catch (error) {
+            cb(error, null);
+          }
+        },
+      }),
     };
   }
 }

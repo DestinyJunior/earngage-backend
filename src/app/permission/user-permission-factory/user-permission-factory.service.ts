@@ -8,6 +8,8 @@ import { Injectable } from '@nestjs/common';
 import { AppAbility, Subjects } from 'src/app/permission/subject.type';
 import { PermissionAction } from 'src/app/permission/permission-action.enum';
 import { User } from 'src/app/user/schemas/user.schema';
+import { Campaign } from 'src/app/campaign/schemas/campaign.schema';
+import { UserType } from 'src/app/user/schemas/user-type.enum';
 
 /**
  * Permission definitions.
@@ -22,30 +24,24 @@ export class UserPermissionFactoryService {
     can(
       [PermissionAction.Update, PermissionAction.ReadOne],
       User,
-      [
-        'firstName',
-        'lastName',
-        'email',
-        'password',
-        'bio',
-        'yearOfExperience',
-        'jobRole',
-        'country',
-      ],
+      ['firstName', 'lastName', 'email', 'bio', 'country'],
       { id: user.id },
     );
 
-    // for sample user data owner
-    // can<UserData & { 'user.id': UserData['user']['id'] }>(
-    //   [
-    //     PermissionAction.Update,
-    //     PermissionAction.ReadOne,
-    //     PermissionAction.Read,
-    //     PermissionAction.Delete,
-    //   ],
-    //   [UserData],
-    //   { 'user.id': user.id },
-    // );
+    if (user.role === UserType.CREATOR) {
+      can(
+        [
+          PermissionAction.Read,
+          PermissionAction.ReadOne,
+          PermissionAction.Update,
+          PermissionAction.Delete,
+        ],
+        Campaign,
+      );
+    }
+
+    if (user.role === UserType.INFLUENCER) {
+    }
 
     return build({
       detectSubjectType: (item) =>

@@ -28,27 +28,8 @@ export class AdminPermissionFactoryService {
 
     can(PermissionAction.Manage, User);
 
-    // can(PermissionAction.Manage, BecomeAPartner);
-
     if (admin.role === AdminRole.SUPER_ADMIN) {
       can(PermissionAction.Create, Admin);
-      // can(
-      //   [
-      //     PermissionAction.Create,
-      //     PermissionAction.Delete,
-      //     PermissionAction.Update,
-      //   ],
-      //   Bootcamp,
-      // );
-
-      // can(
-      //   [
-      //     PermissionAction.Read,
-      //     PermissionAction.ReadOne,
-      //     PermissionAction.Update,
-      //   ],
-      //   BootcampRegistration,
-      // );
     }
 
     return build({

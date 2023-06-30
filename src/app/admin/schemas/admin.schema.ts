@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { AdminRole } from 'src/app/admin/schemas/admin-role.enum';
-import { Photo } from 'src/app/file-upload/schemas/file.schema';
+import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
 
 export type AdminDocument = Admin & Document;
 
@@ -36,8 +36,8 @@ export class Admin {
   @Prop()
   bio?: string;
 
-  @Prop({ type: Photo })
-  photo?: Photo;
+  @Prop({ ref: MediaFile.name, type: mongoose.Types.ObjectId })
+  photo?: mongoose.Types.ObjectId;
 }
 
 export const AdminSchema = SchemaFactory.createForClass(Admin);

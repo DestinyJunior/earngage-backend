@@ -6,11 +6,12 @@ import {
   PHOTO_UPLOAD_OPTIONS,
 } from 'src/app/file-upload/multer-config.service';
 import { ConfigModule } from '@nestjs/config';
-import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.service';
+import { GcpStorageBucketService } from 'src/service/storage-bucket/gcp.storage-bucket.service';
 import { StringGeneratorService } from 'src/service/string-generator/string-generator.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Photo, FileSchema } from './schemas/file.schema';
+import { MediaFile, MediaFileSchema } from './schemas/file.schema';
 import { FileService } from './file.service';
+import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
 
 type PhotoUploadAsyncOptions = {
   inject?: any[];
@@ -25,7 +26,9 @@ type PhotoUploadAsyncOptions = {
  */
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Photo.name, schema: FileSchema }]),
+    MongooseModule.forFeature([
+      { name: MediaFile.name, schema: MediaFileSchema },
+    ]),
     PhotoModule,
   ],
   providers: [FileService],
@@ -37,8 +40,9 @@ export class PhotoModule {
       module: PhotoModule,
       imports: [ConfigModule, ...options.import],
       providers: [
-        StorageBucketService,
+        GcpStorageBucketService,
         StringGeneratorService,
+        S3StorageBucketService,
         {
           inject: options.inject,
           provide: PHOTO_UPLOAD_OPTIONS,
@@ -46,7 +50,8 @@ export class PhotoModule {
         },
       ],
       exports: [
-        StorageBucketService,
+        S3StorageBucketService,
+        GcpStorageBucketService,
         StringGeneratorService,
         PHOTO_UPLOAD_OPTIONS,
       ],
@@ -55,7 +60,8 @@ export class PhotoModule {
     const multerModule = MulterModule.registerAsync({
       imports: [photoModule],
       inject: [
-        StorageBucketService,
+        GcpStorageBucketService,
+        S3StorageBucketService,
         StringGeneratorService,
         PHOTO_UPLOAD_OPTIONS,
       ],

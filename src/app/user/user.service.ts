@@ -6,7 +6,7 @@ import { UserStatus } from 'src/app/user/schemas/user.schema';
 import { EmailingService } from 'src/service/emailing/emailing.service';
 import { UpdateUserProfile } from 'src/app/user/dto/update-user-profile.dto';
 import { UserRepositoryService } from './user-repository/user-repository.service';
-import { StorageBucketService } from 'src/service/storage-bucket/storage-bucket.service';
+import { GcpStorageBucketService } from 'src/service/storage-bucket/gcp.storage-bucket.service';
 import { StringGeneratorService } from '../../service/string-generator/string-generator.service';
 import { UpdateUserPhotosDto } from 'src/app/user/dto/update-user-photos.dto';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
@@ -22,7 +22,7 @@ export class UserService {
     private readonly emailingService: EmailingService,
     private readonly userRepository: UserRepositoryService,
     private readonly entityMapperService: EntityMapperService,
-    private readonly storageBucketService: StorageBucketService,
+    private readonly gcpStorageBucketService: GcpStorageBucketService,
     private readonly stringGeneratorService: StringGeneratorService,
   ) {}
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
-import { Photo } from 'src/app/file-upload/schemas/file.schema';
+import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
 
 /**
  * Service for mapping objects.
@@ -49,12 +49,12 @@ export class EntityMapperService {
     });
   }
 
-  // multerFileToPhoto(file: Express.MulterS3.File) {
-  //   const photo = new Photo();
-  //   photo.name = file.key;
-  //   photo.size = file.size;
-  //   photo.url = file.location;
-  //   photo.mimetype = file.mimetype;
-  //   return photo;
-  // }
+  multerFileToPhoto(file: Express.MulterS3.File) {
+    const photo = new MediaFile();
+    photo.name = file.key;
+    photo.size = file.size;
+    photo.url = file.location;
+    photo.mimetype = file.mimetype;
+    return photo;
+  }
 }
