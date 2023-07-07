@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import { Types as MongoTypes } from 'mongoose';
 import { User } from 'src/app/user/schemas/user.schema';
 
 export type CampaignDocument = Campaign & Document;
 
-export enum CAMPAIGN_TYPE {
+export enum CAMPAIGN_STATUS {
   PUBLISHED = 'Published',
   DRAFT = 'Draft',
   CLOSED = 'Closed',
@@ -12,8 +12,8 @@ export enum CAMPAIGN_TYPE {
 
 @Schema({ timestamps: true })
 export class Campaign {
-  @Prop({ required: true, ref: User.name, type: mongoose.Types.ObjectId })
-  creator: mongoose.Types.ObjectId;
+  @Prop({ required: true, ref: User.name, type: MongoTypes.ObjectId })
+  creator: MongoTypes.ObjectId;
 
   @Prop({ required: true })
   title: string;
@@ -33,7 +33,11 @@ export class Campaign {
   @Prop({ required: true })
   medium: string;
 
-  @Prop({ required: true, default: CAMPAIGN_TYPE.DRAFT, enum: CAMPAIGN_TYPE })
+  @Prop({
+    required: true,
+    default: CAMPAIGN_STATUS.DRAFT,
+    enum: CAMPAIGN_STATUS,
+  })
   status: string;
 }
 

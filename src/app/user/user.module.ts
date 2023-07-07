@@ -14,7 +14,6 @@ import { FileModule } from 'src/app/file-upload/file.module';
 import { ConfigModule } from '@nestjs/config';
 import { IsValidEmailPipe } from 'src/app/user/pipes/is-valid-email.pipe';
 import { IsNotExpiredPasswordResetTokenPipe } from 'src/app/user/pipes/is-not-expired-password-reset-token.pipe';
-import { GcpStorageBucketService } from 'src/service/storage-bucket/gcp.storage-bucket.service';
 import {
   AuthToken,
   AuthTokenSchema,
@@ -51,7 +50,6 @@ import {
     EntityMapperService,
     StringGeneratorService,
     HashService,
-    GcpStorageBucketService,
   ],
   exports: [UserRepositoryService],
 })

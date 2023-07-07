@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import { Types as MongoTypes } from 'mongoose';
 import { Wallet } from 'src/app/wallet/schemas/wallet.schema';
 
 export type WalletTransactionDocument = WalletTransaction & Document;
@@ -34,8 +34,8 @@ export class WalletTransaction {
   @Prop({ required: true })
   amount: number;
 
-  @Prop({ required: true, ref: Wallet.name, type: mongoose.Types.ObjectId })
-  wallet: mongoose.Types.ObjectId;
+  @Prop({ required: true, ref: Wallet.name, type: MongoTypes.ObjectId })
+  wallet: MongoTypes.ObjectId;
 }
 
 export const WalletTransactionSchema =

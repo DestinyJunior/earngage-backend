@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Types as MongoTypes, Model } from 'mongoose';
 import {
   AuthToken,
   AuthTokenDocument,
@@ -65,7 +65,7 @@ export class UserRepositoryService {
    */
   async existsAuthTokenByUser(userId: string) {
     const token = await this.authTokenModel
-      .findOne({ user: new mongoose.Types.ObjectId(userId) })
+      .findOne({ user: new MongoTypes.ObjectId(userId) })
       .exec();
     return token !== null;
   }
@@ -134,7 +134,7 @@ export class UserRepositoryService {
    */
   findAuthTokenByUser(userId: string) {
     return this.authTokenModel
-      .findOne({ user: new mongoose.Types.ObjectId(userId) })
+      .findOne({ user: new MongoTypes.ObjectId(userId) })
       .exec();
   }
 
@@ -143,7 +143,7 @@ export class UserRepositoryService {
    */
   async createOrUpdateAuthToken(authToken: AuthToken) {
     const getAuthToken = await this.authTokenModel.findOne({
-      user: new mongoose.Types.ObjectId(authToken.user),
+      user: new MongoTypes.ObjectId(authToken.user),
     });
 
     if (!getAuthToken) {
@@ -168,7 +168,7 @@ export class UserRepositoryService {
     userData: Pick<User, 'tiktokHandle' | 'email' | 'photo'>,
   ) {
     return this.userModel
-      .updateOne({ _id: new mongoose.Types.ObjectId(_id) }, userData)
+      .updateOne({ _id: new MongoTypes.ObjectId(_id) }, userData)
       .exec();
   }
 
@@ -190,7 +190,7 @@ export class UserRepositoryService {
   setAccountType(_id: string, accountType: UserType, args: Partial<User>) {
     return this.userModel
       .updateOne(
-        { _id: new mongoose.Types.ObjectId(_id) },
+        { _id: new MongoTypes.ObjectId(_id) },
         {
           accountType,
           ...args,
@@ -214,7 +214,7 @@ export class UserRepositoryService {
     authTokenData: Pick<AuthToken, 'token' | 'expiresAt' | 'used'>,
   ) {
     return this.authTokenModel
-      .updateOne({ user: new mongoose.Types.ObjectId(userId) }, authTokenData)
+      .updateOne({ user: new MongoTypes.ObjectId(userId) }, authTokenData)
       .exec();
   }
 
@@ -226,7 +226,7 @@ export class UserRepositoryService {
     authTokenData: Pick<AuthToken, 'usedAt' | 'used'>,
   ) {
     return this.authTokenModel
-      .updateOne({ user: new mongoose.Types.ObjectId(userId) }, authTokenData)
+      .updateOne({ user: new MongoTypes.ObjectId(userId) }, authTokenData)
       .exec();
   }
 }

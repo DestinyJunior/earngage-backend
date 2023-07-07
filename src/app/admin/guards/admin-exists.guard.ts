@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import mongoose from 'mongoose';
+import { Types as MongoTypes } from 'mongoose';
 import { AdminService } from 'src/app/admin/admin.service';
 import { notFoundError } from 'src/error/error.functions';
 import jwtDecode from 'jwt-decode';
@@ -17,7 +17,7 @@ export class AdminExistsGuard implements CanActivate {
     const token = req.headers.authorization;
     const payload = jwtDecode(token);
 
-    if (!mongoose.Types.ObjectId.isValid(payload['sub'])) {
+    if (!MongoTypes.ObjectId.isValid(payload['sub'])) {
       throw notFoundError('Admin do not exist');
     }
 

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import { Types as MongoTypes } from 'mongoose';
 import { GenerateOptions } from 'randomstring';
 import { User } from './user.schema';
 
@@ -18,8 +18,8 @@ export class AuthToken {
 
   static readonly TOKEN_EXPIRES_MINUTES = 5;
 
-  @Prop({ required: true, ref: User.name, type: mongoose.Types.ObjectId })
-  user: mongoose.Types.ObjectId;
+  @Prop({ required: true, ref: User.name, type: MongoTypes.ObjectId })
+  user: MongoTypes.ObjectId;
 
   @Prop()
   token: string;
