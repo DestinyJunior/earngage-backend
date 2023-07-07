@@ -19,9 +19,9 @@ import { CampaignBudgetModule } from './app/campaign-budget/campaign-budget.modu
 import { WalletTransactionModule } from './app/wallet-transaction/wallet-transaction.module';
 import { WalletModule } from './app/wallet/wallet.module';
 import { S3StorageBucketService } from './service/storage-bucket/s3.storage-bucket.service';
-import { EmailingService } from './service/emailing/emailing.service';
 import { HashService } from './service/hash/hash.service';
 import { EntityMapperService } from './service/entity-mapper/entity-mapper.service';
+import { AuthModule } from './app/auth/auth.module';
 
 @Module({
   imports: [
@@ -32,6 +32,23 @@ import { EntityMapperService } from './service/entity-mapper/entity-mapper.servi
     CampaignBudgetModule,
     WalletTransactionModule,
     WalletModule,
+    AuthModule,
+    // MailerModule.forRootAsync({
+    //   imports: [ConfigProviderModule],
+    //   inject: [ConfigService],
+    //   useFactory: (configService: ConfigService) => ({
+    //     transport: {
+    //       service: 'gmail',
+    //       host: configService.get('EMAIL_HOST'),
+    //       port: configService.get('EMAIL_PORT'),
+    //       secure: true,
+    //       auth: {
+    //         user: configService.get('EMAIL_ID'),
+    //         pass: configService.get('EMAIL_PASS'),
+    //       },
+    //     },
+    //   }),
+    // }),
   ],
   controllers: [AppController],
   providers: [

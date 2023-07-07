@@ -10,6 +10,7 @@ import {
   UserDocument,
   UserStatus,
 } from 'src/app/user/schemas/user.schema';
+import { CreatePhoneNumberDto } from '../dto/create-phone-number-dto';
 
 /**
  * Database repository class for user entity
@@ -25,6 +26,18 @@ export class UserRepositoryService {
   /**
    * Checks if a user entity with an email exists.
    */
+  async existsByPhone(phoneNumber: Pick<CreatePhoneNumberDto, 'number'>) {
+    const user = await this.userModel
+      .findOne({
+        'phoneNumber.number': phoneNumber.number,
+      })
+      .exec();
+    return user !== null;
+  }
+
+  /**
+   * Checks if a user entity with an phone exists.
+   */
   async existsByEmail(email: string) {
     const user = await this.userModel.findOne({ email }).exec();
     return user !== null;
@@ -33,9 +46,11 @@ export class UserRepositoryService {
   /**
    * Checks if a user entity with an email verification token exists.
    */
-  async existsByEmailVerificationToken(emailVerificationToken: string) {
+  async existsByAuthCodeToken(
+    phoneNumber: Pick<CreatePhoneNumberDto, 'number'>,
+  ) {
     const user = await this.userModel
-      .findOne({ emailVerificationToken })
+      .findOne({ 'phoneNumber.number': phoneNumber.number })
       .exec();
     return user !== null;
   }
@@ -79,6 +94,17 @@ export class UserRepositoryService {
   }
 
   /**
+   * Finds a user entity with an email
+   */
+  findByPhone(phoneNumber: Pick<CreatePhoneNumberDto, 'number'>) {
+    return this.userModel
+      .findOne({
+        'phoneNumber.number': phoneNumber.number,
+      })
+      .exec();
+  }
+
+  /**
    * Finds a user entity with an email and email verification token
    */
   findByEmailAndEmailVerificationToken(
@@ -107,14 +133,22 @@ export class UserRepositoryService {
   /**
    * Create a user auth token
    */
-  createAuthToken(authToken: AuthToken) {
-    return this.authTokenModel.create(authToken);
+  async createOrUpdateAuthToken(authToken: AuthToken) {
+    const getAuthToken = await this.authTokenModel.findOne({
+      user: new mongoose.Types.ObjectId(authToken.user),
+    });
+
+    if (!getAuthToken) {
+      return this.authTokenModel.create(authToken);
+    }
+
+    return this.authTokenModel.findByIdAndUpdate(getAuthToken._id, authToken);
   }
 
   /**
    * Creates a user entity
    */
-  create(user: Pick<User, 'email' | 'phoneNumber' | 'status'>) {
+  create(user: Pick<User, 'phoneNumber' | 'status'>) {
     return this.userModel.create(user);
   }
 
@@ -126,10 +160,8 @@ export class UserRepositoryService {
     {
       firstName,
       lastName,
-      bio,
-      country,
       photo,
-    }: Pick<User, 'firstName' | 'lastName' | 'bio' | 'country' | 'photo'>,
+    }: Pick<User, 'firstName' | 'lastName' | 'photo'>,
   ) {
     return this.userModel
       .updateOne(
@@ -137,8 +169,6 @@ export class UserRepositoryService {
         {
           firstName,
           lastName,
-          bio,
-          country,
           photo,
         },
       )
@@ -158,24 +188,10 @@ export class UserRepositoryService {
   }
 
   /**
-   * Updates a user entity email-verified
-   */
-  updateEmailVerified(_id: string, emailVerified: boolean) {
-    return this.userModel.updateOne({ _id }, { emailVerified }).exec();
-  }
-
-  /**
    * Updates a user entity status
    */
   updateStatus(_id: string, status: UserStatus) {
     return this.userModel.updateOne({ _id }, { status }).exec();
-  }
-
-  /**
-   * Updates a user entity email verification token
-   */
-  updateEmailVerificationToken(_id: string, emailVerificationToken: string) {
-    return this.userModel.updateOne({ _id }, { emailVerificationToken }).exec();
   }
 
   /**

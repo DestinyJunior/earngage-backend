@@ -14,6 +14,7 @@ import { StringGeneratorService } from 'src/service/string-generator/string-gene
 import { AdminModule } from 'src/app/admin/admin.module';
 import { LocalAdminStrategy } from 'src/app/auth/strategies/local-admin.strategy';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
+import { TwilioSmsService } from 'src/service/sms/twilio.sms.service';
 
 /**
  * Auth module configurations.
@@ -37,13 +38,13 @@ import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.ser
     ConfigService,
     HashService,
     AuthService,
-    EmailingService,
     EntityMapperService,
     StringGeneratorService,
     JwtStrategy,
     LocalStrategy,
     LocalAdminStrategy,
     LocalEmailTokenStrategy,
+    TwilioSmsService,
   ],
 })
 export class AuthModule {}

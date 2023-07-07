@@ -5,16 +5,19 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { unauthorizedIncorrectCredentialsError } from 'src/error/error.functions';
 
 /**
- * Passport strategy for email & password user login.
+ * Passport strategy for phoneNumber user login.
  */
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
-    super({ usernameField: 'email' });
+    super({ usernameField: 'phoneNumber' });
   }
 
-  async validate(email: string, password: string) {
-    const user = await this.authService.verifyPasswordAuth(email, password);
+  async validate(phoneNumber: string, token?: string) {
+    const user = await this.authService.verifyPhoneTokenAuth(
+      phoneNumber,
+      token,
+    );
 
     if (user === null) {
       throw unauthorizedIncorrectCredentialsError();

@@ -43,14 +43,8 @@ export class User {
   @Prop()
   username?: string;
 
-  @Prop({ required: true, lowercase: true })
-  email: string;
-
-  @Prop({ required: true, type: Boolean, default: false })
-  emailVerified: boolean;
-
-  @Prop({ required: true })
-  emailVerificationToken: string;
+  @Prop({ required: false, lowercase: true })
+  email?: string;
 
   @Prop({ required: true, type: PhoneNumberField })
   phoneNumber: PhoneNumberField;
@@ -58,22 +52,16 @@ export class User {
   @Prop({ required: true, type: Boolean, default: false })
   phoneNumberVerified: boolean;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: UserStatus.DRAFT })
   status: UserStatus;
 
   @Prop()
   password?: string;
 
-  @Prop()
-  bio?: string;
-
-  @Prop()
-  country?: string;
-
   @Prop({ type: MediaFile })
   photo?: MediaFile;
 
-  @Prop({ default: UserType.INFLUENCER })
+  @Prop({ default: UserType.NONE })
   role: UserType;
 }
 

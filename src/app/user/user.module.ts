@@ -56,7 +56,6 @@ import {
     EntityMapperService,
     StringGeneratorService,
     HashService,
-    EmailingService,
     GcpStorageBucketService,
   ],
   exports: [UserRepositoryService],

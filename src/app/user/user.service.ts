@@ -3,7 +3,6 @@ import { User } from './schemas/user.schema';
 import { HashService } from 'src/service/hash/hash.service';
 import { CreateUserDto } from 'src/app/user/dto/create-user.dto';
 import { UserStatus } from 'src/app/user/schemas/user.schema';
-import { EmailingService } from 'src/service/emailing/emailing.service';
 import { UpdateUserProfile } from 'src/app/user/dto/update-user-profile.dto';
 import { UserRepositoryService } from './user-repository/user-repository.service';
 import { GcpStorageBucketService } from 'src/service/storage-bucket/gcp.storage-bucket.service';
@@ -19,7 +18,6 @@ import { AuthToken } from './schemas/authentication-token.schema';
 export class UserService {
   constructor(
     private readonly hashService: HashService,
-    private readonly emailingService: EmailingService,
     private readonly userRepository: UserRepositoryService,
     private readonly entityMapperService: EntityMapperService,
     private readonly gcpStorageBucketService: GcpStorageBucketService,
@@ -32,9 +30,7 @@ export class UserService {
   generateEmailVerificationToken() {
     return this.stringGeneratorService
       .setExists(
-        this.userRepository.existsByEmailVerificationToken.bind(
-          this.userRepository,
-        ),
+        this.userRepository.existsByAuthCodeToken.bind(this.userRepository),
       )
       .generate(User.EMAIL_VERIFICATION_TOKEN_CONFIG);
   }
@@ -42,20 +38,13 @@ export class UserService {
   /**
    * Handles creating of a user.
    */
-  async create({ email, user, phoneNumber }: CreateUserDto) {
+  async create({ user, phoneNumber }: CreateUserDto) {
     if (user === null) {
       user = await this.userRepository.create({
-        email,
         phoneNumber,
         status: UserStatus.DRAFT,
       });
     }
-
-    // send phone number verification
-    // await this.emailingService.sendEmailVerification(
-    //   email,
-    //   emailVerificationToken,
-    // );
 
     return user;
   }
@@ -110,38 +99,11 @@ export class UserService {
   }
 
   /**
-   * Handles email verification of user.
-   */
-  async updateEmailVerified(user: User, emailVerified: boolean) {
-    await this.userRepository.updateEmailVerified(user.id, emailVerified);
-    return this.userRepository.findById(user.id);
-  }
-
-  /**
    * Handles user auth token update.
    */
   async updateAuthToken(user: User, authToken: AuthToken) {
     authToken.token = await this.hashService.hashString(authToken.token);
     await this.userRepository.updateAuthTokenByUser(user.id, authToken);
-    return this.userRepository.findById(user.id);
-  }
-
-  /**
-   * Handles update and resend of email verification token.
-   */
-  async updateEmailVerificationToken(user: User) {
-    const emailVerificationToken = await this.generateEmailVerificationToken();
-
-    await this.userRepository.updateEmailVerificationToken(
-      user.id,
-      emailVerificationToken,
-    );
-
-    // await this.emailingService.sendEmailVerification(
-    //   user.email,
-    //   emailVerificationToken,
-    // );
-
     return this.userRepository.findById(user.id);
   }
 }

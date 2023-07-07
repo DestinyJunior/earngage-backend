@@ -97,48 +97,6 @@ export class UserController {
   }
 
   /**
-   * Handles email verification of user.
-   */
-  @Put('email-verified')
-  @UseGuards(UserExistsGuard)
-  @UseInterceptors(InjectRequestIntoValidationInterceptor)
-  async updateEmailVerified(
-    @UserParam() user: User,
-    @Body() userUpdateDto: UpdateUserEmailVerifiedDto, //This does not do anything after token validation.
-  ) {
-    const updatedUser = await this.userService.updateEmailVerified(
-      user,
-      userUpdateDto !== null,
-    );
-
-    return ResponseDto.success(
-      'User email verified',
-      this.entityMapperService.entityToDto(UserDto, updatedUser),
-    );
-  }
-
-  // /**
-  //  * Handles user password update.
-  //  */
-  // @Put('password')
-  // @UseGuards(UserExistsGuard, JwtAuthGuard, UpdatePasswordPermissionGuard)
-  // @UseInterceptors(InjectRequestIntoValidationInterceptor)
-  // async updatePassword(
-  //   @UserParam() user: User,
-  //   @Body() userUpdateDto: UpdateUserPasswordDto,
-  // ) {
-  //   const updatedUser = await this.userService.updateAuthToken(
-  //     user,
-  //     userUpdateDto.,
-  //   );
-
-  //   return ResponseDto.success(
-  //     'User password updated',
-  //     this.entityMapperService.entityToDto(UserDto, updatedUser),
-  //   );
-  // }
-
-  /**
    * Handles update of user email.
    */
   @Put('email')
@@ -154,22 +112,6 @@ export class UserController {
 
     return ResponseDto.success(
       'User email updated',
-      this.entityMapperService.entityToDto(UserDto, updatedUser),
-    );
-  }
-
-  /**
-   * Handles update and resend of email verification token.
-   */
-  @Put('email-verification-token')
-  @UseGuards(UserExistsGuard)
-  async updateEmailVerificationToken(@UserParam() user: User) {
-    const updatedUser = await this.userService.updateEmailVerificationToken(
-      user,
-    );
-
-    return ResponseDto.success(
-      'User email verification token updated',
       this.entityMapperService.entityToDto(UserDto, updatedUser),
     );
   }

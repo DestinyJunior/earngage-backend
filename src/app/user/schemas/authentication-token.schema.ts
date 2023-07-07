@@ -13,10 +13,10 @@ export class AuthToken {
   static readonly TOKEN_CONFIG: GenerateOptions = {
     length: 5,
     readable: true,
-    charset: 'number',
+    charset: 'numeric',
   };
 
-  static readonly TOKEN_EXPIRES_MINUTES = 10;
+  static readonly TOKEN_EXPIRES_MINUTES = 5;
 
   @Prop({ required: true, ref: User.name, type: mongoose.Types.ObjectId })
   user: mongoose.Types.ObjectId;

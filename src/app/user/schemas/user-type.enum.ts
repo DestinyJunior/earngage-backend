@@ -4,4 +4,5 @@
 export enum UserType {
   CREATOR = 'CREATOR',
   INFLUENCER = 'INFLUENCER',
+  NONE = 'NONE',
 }
