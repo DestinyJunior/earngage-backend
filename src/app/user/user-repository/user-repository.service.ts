@@ -195,11 +195,23 @@ export class UserRepositoryService {
   }
 
   /**
-   * Updates a user entity reset password token
+   * Updates a user entity reset token
    */
   updateAuthTokenByUser(
     userId: string,
     authTokenData: Pick<AuthToken, 'token' | 'expiresAt' | 'used'>,
+  ) {
+    return this.authTokenModel
+      .updateOne({ user: new mongoose.Types.ObjectId(userId) }, authTokenData)
+      .exec();
+  }
+
+  /**
+   * Updates a user entity reset token
+   */
+  updateAuthTokenUsedByUser(
+    userId: string,
+    authTokenData: Pick<AuthToken, 'usedAt' | 'used'>,
   ) {
     return this.authTokenModel
       .updateOne({ user: new mongoose.Types.ObjectId(userId) }, authTokenData)

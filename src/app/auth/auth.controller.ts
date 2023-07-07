@@ -38,7 +38,7 @@ export class AuthController {
   /**
    * Handles user login with email & password.
    */
-  @Post('user')
+  @Post('user/verify-code')
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   async userLogin(@UserParam() user: User) {

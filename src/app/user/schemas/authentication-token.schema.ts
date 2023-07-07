@@ -27,6 +27,9 @@ export class AuthToken {
   @Prop({ type: Date })
   expiresAt: Date;
 
+  @Prop({ type: Date, required: false })
+  usedAt?: Date;
+
   @Prop({ type: Boolean, default: false })
   used: boolean;
 }

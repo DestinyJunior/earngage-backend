@@ -83,15 +83,26 @@ export class AuthService {
   /**
    * handles verification of login email & auth token token
    */
-  async verifyPhoneTokenAuth(email: string, token: string) {
-    const user = await this.userRepository.findByEmail(email);
+  async verifyPhoneTokenAuth(phoneNumber: string, code: string) {
+    const user = await this.userRepository.findByPhone({ number: phoneNumber });
     const authToken = await this.userRepository.findAuthTokenByUser(user._id);
+
+    if (authToken.used) {
+      return null;
+    }
 
     if (
       user !== null &&
       authToken != null &&
-      (await this.hashService.compareString(token, authToken.token))
+      (await this.hashService.compareString(code, authToken.token))
     ) {
+      // update used auth token
+
+      await this.userRepository.updateAuthTokenUsedByUser(user._id, {
+        used: true,
+        usedAt: new Date(Date.now()),
+      });
+
       return user;
     }
 

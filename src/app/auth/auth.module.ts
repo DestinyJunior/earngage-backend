@@ -9,7 +9,6 @@ import { LocalEmailTokenStrategy } from 'src/app/auth/strategies/local-email-tok
 import { UserModule } from 'src/app/user/user.module';
 import { JwtStrategy } from 'src/app/auth/strategies/jwt.strategy';
 import { HashService } from 'src/service/hash/hash.service';
-import { EmailingService } from 'src/service/emailing/emailing.service';
 import { StringGeneratorService } from 'src/service/string-generator/string-generator.service';
 import { AdminModule } from 'src/app/admin/admin.module';
 import { LocalAdminStrategy } from 'src/app/auth/strategies/local-admin.strategy';
