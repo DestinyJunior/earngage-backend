@@ -39,7 +39,7 @@ export class AuthService {
   /**
    * handles generation of auth code.
    */
-  async getAuthCode(phoneNumber: CreatePhoneNumberDto) {
+  async getAuthCode(phoneNumber: CreatePhoneNumberDto, username?: string) {
     // send sms here
     const userWithPhone = await this.userRepository.existsByPhone(phoneNumber);
 
@@ -47,6 +47,7 @@ export class AuthService {
       // create new user with phone
       await this.userRepository.create({
         phoneNumber,
+        username,
         status: UserStatus.DRAFT,
       });
     }

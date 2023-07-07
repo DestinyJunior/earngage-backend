@@ -40,7 +40,7 @@ export class User {
   @Prop()
   tiktokHandle?: string;
 
-  @Prop()
+  @Prop({ unique: true, lowercase: true, trim: true })
   username?: string;
 
   @Prop({ required: false, lowercase: true })
@@ -54,9 +54,6 @@ export class User {
 
   @Prop({ required: true, default: UserStatus.DRAFT })
   status: UserStatus;
-
-  @Prop()
-  password?: string;
 
   @Prop({ type: MediaFile })
   photo?: MediaFile;

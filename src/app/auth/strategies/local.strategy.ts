@@ -10,7 +10,10 @@ import { unauthorizedIncorrectCredentialsError } from 'src/error/error.functions
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
-    super({ usernameField: 'phoneNumber', passwordField: 'code' });
+    super({
+      usernameField: 'phoneNumber',
+      passwordField: 'code',
+    });
   }
 
   async validate(phoneNumber: string, code: string) {

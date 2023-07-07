@@ -9,15 +9,15 @@ import {
 import { UserRepositoryService } from '../user-repository/user-repository.service';
 
 /**
- * Custom validator that checks if provided email exists.
+ * Custom validator that checks if provided username exists.
  */
 @Injectable()
 @ValidatorConstraint({ async: true })
-export class IsUniqueEmailPipe implements ValidatorConstraintInterface {
+export class IsUniqueUsernamePipe implements ValidatorConstraintInterface {
   constructor(private readonly userRepository: UserRepositoryService) {}
 
-  async validate(email: string, args: ValidationArguments) {
-    const user = await this.userRepository.findByEmail(email);
+  async validate(username: string, args: ValidationArguments) {
+    const user = await this.userRepository.findByUsername(username);
     args.object['user'] = user;
     return user === null || user.phoneNumber === undefined;
   }
@@ -26,14 +26,14 @@ export class IsUniqueEmailPipe implements ValidatorConstraintInterface {
 /**
  * Decorator function for above custom validator.
  */
-export function IsUniqueEmail(validationOptions?: ValidationOptions) {
+export function IsUniqueUsername(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsUniqueEmailPipe,
+      validator: IsUniqueUsernamePipe,
     });
   };
 }

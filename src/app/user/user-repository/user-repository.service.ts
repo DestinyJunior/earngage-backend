@@ -94,6 +94,13 @@ export class UserRepositoryService {
   }
 
   /**
+   * Finds a user entity with an username
+   */
+  async findByUsername(username: string) {
+    return await this.userModel.findOne({ username }).exec();
+  }
+
+  /**
    * Finds a user entity with an email
    */
   findByPhone(phoneNumber: Pick<CreatePhoneNumberDto, 'number'>) {
@@ -148,7 +155,7 @@ export class UserRepositoryService {
   /**
    * Creates a user entity
    */
-  create(user: Pick<User, 'phoneNumber' | 'status'>) {
+  create(user: Pick<User, 'phoneNumber' | 'status' | 'username'>) {
     return this.userModel.create(user);
   }
 

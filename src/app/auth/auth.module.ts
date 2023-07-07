@@ -14,6 +14,7 @@ import { AdminModule } from 'src/app/admin/admin.module';
 import { LocalAdminStrategy } from 'src/app/auth/strategies/local-admin.strategy';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
 import { TwilioSmsService } from 'src/service/sms/twilio.sms.service';
+import { IsUniqueUsernamePipe } from '../user/pipes/is-unique-username.pipe';
 
 /**
  * Auth module configurations.
@@ -39,6 +40,7 @@ import { TwilioSmsService } from 'src/service/sms/twilio.sms.service';
     AuthService,
     EntityMapperService,
     StringGeneratorService,
+    IsUniqueUsernamePipe,
     JwtStrategy,
     LocalStrategy,
     LocalAdminStrategy,
