@@ -65,7 +65,14 @@ export class UserController {
    * Handles update of a user.
    */
   @Put('update-profile')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'photo', maxCount: 1 }]))
+  @UseInterceptors(
+    FileFieldsInterceptor([{ name: 'photo', maxCount: 1 }], {
+      limits: {
+        files: 1,
+        fileSize: 1024 * 1024,
+      },
+    }),
+  )
   @UseGuards(UserExistsGuard, JwtAuthGuard, UpdateUserPermissionGuard)
   async update(
     @UserParam() user: User,
@@ -86,7 +93,7 @@ export class UserController {
 
   @Get('my-profile')
   @HttpCode(200)
-  @UseGuards(UserExistsGuard, JwtAuthGuard)
+  @UseGuards(UserExistsGuard, JwtAuthGuard, ReadOnePermissionGuard)
   findOneUserProfile(@UserParam() user: User) {
     return ResponseDto.success(
       'User fetched',

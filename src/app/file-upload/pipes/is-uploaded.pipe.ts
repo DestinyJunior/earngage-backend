@@ -7,7 +7,7 @@ import {
 
 @Injectable()
 export class IsUploadedPipe implements PipeTransform {
-  transform(value: Express.Multer.File[]) {
+  transform(value: Express.MulterS3.File[]) {
     if (value === undefined || (Array.isArray(value) && value.length === 0)) {
       throw validationErrorFactory([
         createValidationError(

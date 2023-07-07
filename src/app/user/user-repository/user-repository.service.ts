@@ -165,21 +165,10 @@ export class UserRepositoryService {
    */
   update(
     _id: string,
-    {
-      firstName,
-      lastName,
-      photo,
-    }: Pick<User, 'firstName' | 'lastName' | 'photo'>,
+    userData: Pick<User, 'tiktokHandle' | 'email' | 'photo'>,
   ) {
     return this.userModel
-      .updateOne(
-        { _id },
-        {
-          firstName,
-          lastName,
-          photo,
-        },
-      )
+      .updateOne({ _id: new mongoose.Types.ObjectId(_id) }, userData)
       .exec();
   }
 

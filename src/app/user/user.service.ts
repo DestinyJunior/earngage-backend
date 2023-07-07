@@ -4,13 +4,13 @@ import { HashService } from 'src/service/hash/hash.service';
 import { UserStatus } from 'src/app/user/schemas/user.schema';
 import { UpdateUserProfile } from 'src/app/user/dto/update-user-profile.dto';
 import { UserRepositoryService } from './user-repository/user-repository.service';
-import { GcpStorageBucketService } from 'src/service/storage-bucket/gcp.storage-bucket.service';
 import { StringGeneratorService } from '../../service/string-generator/string-generator.service';
 import { UpdateUserPhotosDto } from 'src/app/user/dto/update-user-photos.dto';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
 import { AuthToken } from './schemas/authentication-token.schema';
 import { SetUserAccountTypeDto } from './dto/create-user-type.dto';
 import { UserType } from './schemas/user-type.enum';
+import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
 
 /**
  * Service class that handles user system logic.
@@ -21,7 +21,7 @@ export class UserService {
     private readonly hashService: HashService,
     private readonly userRepository: UserRepositoryService,
     private readonly entityMapperService: EntityMapperService,
-    private readonly gcpStorageBucketService: GcpStorageBucketService,
+    private readonly awsS3StorageBucketService: S3StorageBucketService,
     private readonly stringGeneratorService: StringGeneratorService,
   ) {}
 
@@ -69,7 +69,23 @@ export class UserService {
     const photoUploaded =
       photosDto?.photo !== undefined && photosDto.photo.length > 0;
 
+    if (photoUploaded) {
+      updateUserDto.photo = this.entityMapperService.multerFileToPhoto(
+        photosDto.photo[0],
+      );
+    }
+
     await this.userRepository.update(user.id, updateUserDto);
+
+    const deletePhotos = [];
+
+    if (photoUploaded !== undefined && oldPhotoKey !== undefined) {
+      deletePhotos.push(
+        this.awsS3StorageBucketService.deletePhoto(oldPhotoKey),
+      );
+    }
+
+    await Promise.all(deletePhotos);
 
     return this.userRepository.findById(user.id);
   }
