@@ -3,6 +3,7 @@ import {
   AbilityBuilder,
   AbilityClass,
   ExtractSubjectType,
+  mongoQueryMatcher,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import { AppAbility, Subjects } from 'src/app/permission/subject.type';
@@ -24,7 +25,14 @@ export class UserPermissionFactoryService {
     can(
       [PermissionAction.Update, PermissionAction.ReadOne],
       User,
-      ['firstName', 'lastName', 'email', 'bio', 'country'],
+      [
+        'firstName',
+        'lastName',
+        'username',
+        'phoneNumber',
+        'phoneNumberVerified',
+        'accountType',
+      ],
       { id: user.id },
     );
 
@@ -41,11 +49,14 @@ export class UserPermissionFactoryService {
     }
 
     if (user.accountType === UserType.INFLUENCER) {
+      can([PermissionAction.Read, PermissionAction.ReadOne], Campaign);
     }
 
     return build({
       detectSubjectType: (item) =>
         item.constructor as ExtractSubjectType<Subjects>,
+      fieldMatcher: (fields) => (field) => fields.includes(field),
+      conditionsMatcher: mongoQueryMatcher,
     });
   }
 }

@@ -86,7 +86,7 @@ export class UserController {
 
   @Get('my-profile')
   @HttpCode(200)
-  @UseGuards(UserExistsGuard, JwtAuthGuard, ReadOnePermissionGuard)
+  @UseGuards(UserExistsGuard, JwtAuthGuard)
   findOneUserProfile(@UserParam() user: User) {
     return ResponseDto.success(
       'User fetched',
