@@ -8,7 +8,7 @@ import { StringGeneratorService } from 'src/service/string-generator/string-gene
 import { AuthToken } from 'src/app/user/schemas/authentication-token.schema';
 import { UserRepositoryService } from 'src/app/user/user-repository/user-repository.service';
 import { AdminRepositoryService } from 'src/app/admin/admin.repository';
-import { CreatePhoneNumberDto } from '../user/dto/create-phone-number-dto';
+import { CreatePhoneNumberDto } from '../user/dto/create-phone-number.dto';
 import { TwilioSmsService } from 'src/service/sms/twilio.sms.service';
 
 /**

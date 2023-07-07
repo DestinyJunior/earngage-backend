@@ -29,15 +29,15 @@ type PhotoUploadAsyncOptions = {
     MongooseModule.forFeature([
       { name: MediaFile.name, schema: MediaFileSchema },
     ]),
-    PhotoModule,
+    FileModule,
   ],
   providers: [FileService],
   exports: [FileService, MongooseModule],
 })
-export class PhotoModule {
+export class FileModule {
   static registerAsync(options: PhotoUploadAsyncOptions): DynamicModule {
     const photoModule: DynamicModule = {
-      module: PhotoModule,
+      module: FileModule,
       imports: [ConfigModule, ...options.import],
       providers: [
         GcpStorageBucketService,

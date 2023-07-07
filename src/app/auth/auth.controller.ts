@@ -9,7 +9,6 @@ import {
 import { Admin } from 'src/app/admin/schemas/admin.schema';
 import { LocalAdminAuthGuard } from 'src/app/auth/guards/local-admin-auth.guard';
 import { LocalAuthGuard } from 'src/app/auth/guards/local-auth.guard';
-import { LocalEmailTokenAuthGuard } from 'src/app/auth/guards/local-email-token-auth.guard';
 import { UserParam } from 'src/decorator/user-param.decorator';
 import { ResponseDto } from 'src/dto/response.dto';
 import { User } from 'src/app/user/schemas/user.schema';
@@ -55,16 +54,5 @@ export class AuthController {
   async adminLogin(@UserParam() admin: Admin) {
     const accessToken = await this.authService.getAdminAccessToken(admin);
     return ResponseDto.success('Admin authenticated', accessToken);
-  }
-
-  /**
-   * Handles user login with email & email-verification-token.
-   */
-  @Post('email-verification-token')
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalEmailTokenAuthGuard)
-  async emailVerificationToken(@UserParam() user: User) {
-    const accessToken = await this.authService.getAccessToken(user);
-    return ResponseDto.success('User authenticated', accessToken);
   }
 }

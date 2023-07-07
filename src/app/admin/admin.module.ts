@@ -9,7 +9,7 @@ import { HashService } from 'src/service/hash/hash.service';
 import { IsUniqueAdminEmailPipe } from 'src/app/admin/pipes/is-unique-admin-email.pipe';
 import { PermissionModule } from 'src/app/permission/permission.module';
 import { ConfigModule } from '@nestjs/config';
-import { PhotoModule } from 'src/app/file-upload/file.module';
+import { FileModule } from 'src/app/file-upload/file.module';
 import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
 import { IsValidAdminPasswordPipe } from 'src/app/admin/pipes/is-valid-admin-password.pipe';
 
@@ -19,7 +19,7 @@ import { IsValidAdminPasswordPipe } from 'src/app/admin/pipes/is-valid-admin-pas
 @Module({
   imports: [
     ConfigModule,
-    PhotoModule.registerAsync({
+    FileModule.registerAsync({
       import: [AdminModule],
       inject: [AdminRepositoryService],
       useFactory: (adminRepository: AdminRepositoryService) => ({

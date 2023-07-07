@@ -10,7 +10,8 @@ import {
   UserDocument,
   UserStatus,
 } from 'src/app/user/schemas/user.schema';
-import { CreatePhoneNumberDto } from '../dto/create-phone-number-dto';
+import { CreatePhoneNumberDto } from '../dto/create-phone-number.dto';
+import { UserType } from '../schemas/user-type.enum';
 
 /**
  * Database repository class for user entity
@@ -190,6 +191,21 @@ export class UserRepositoryService {
       .updateOne(
         { _id },
         { email, emailVerificationToken, emailVerified: false },
+      )
+      .exec();
+  }
+
+  /**
+   * Updates a user entity account type
+   */
+  setAccountType(_id: string, accountType: UserType, args: Partial<User>) {
+    return this.userModel
+      .updateOne(
+        { _id: new mongoose.Types.ObjectId(_id) },
+        {
+          accountType,
+          ...args,
+        },
       )
       .exec();
   }

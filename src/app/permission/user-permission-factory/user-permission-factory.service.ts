@@ -28,7 +28,7 @@ export class UserPermissionFactoryService {
       { id: user.id },
     );
 
-    if (user.role === UserType.CREATOR) {
+    if (user.accountType === UserType.CREATOR) {
       can(
         [
           PermissionAction.Read,
@@ -40,7 +40,7 @@ export class UserPermissionFactoryService {
       );
     }
 
-    if (user.role === UserType.INFLUENCER) {
+    if (user.accountType === UserType.INFLUENCER) {
     }
 
     return build({

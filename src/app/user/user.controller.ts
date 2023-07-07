@@ -3,8 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Param,
-  Delete,
   Put,
   UseGuards,
   UseInterceptors,
@@ -20,14 +18,12 @@ import { ResponseDto } from 'src/dto/response.dto';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
 import { DataParam } from 'src/decorator/data-param.decorator';
 import { JwtAuthGuard } from 'src/app/auth/guards/jwt-auth.guard';
-import { CreateUserDto } from 'src/app/user/dto/create-user.dto';
-import { UpdateEmailPermissionGuard } from 'src/app/user/guards/update-email-permission.guard';
 import { ReadOnePermissionGuard } from 'src/app/user/guards/read-one-permission.guard';
 import { UpdateUserProfile } from 'src/app/user/dto/update-user-profile.dto';
 import { UpdateUserPermissionGuard } from 'src/app/user/guards/update-user-permission.guard';
-import { UpdateUserDto } from 'src/app/user/dto/update-user.dto';
 import { UpdateUserPhotosDto } from 'src/app/user/dto/update-user-photos.dto';
 import { UserParam } from 'src/decorator/user-param.decorator';
+import { SetUserAccountTypeDto } from './dto/create-user-type.dto';
 
 /**
  * Controller for handling user requests.
@@ -42,14 +38,15 @@ export class UserController {
   /**
    * Handles creating of user.
    */
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    const user = await this.userService.create(createUserDto);
+  @Post('set-account-type')
+  @UseGuards(UserExistsGuard, JwtAuthGuard)
+  async setUserType(
+    @UserParam() user: User,
+    @Body() setAccountTypeDto: SetUserAccountTypeDto,
+  ) {
+    await this.userService.setUserAccount(user, setAccountTypeDto);
 
-    return ResponseDto.success(
-      'User created',
-      this.entityMapperService.entityToDto(UserDto, user),
-    );
+    return ResponseDto.success('User account updated');
   }
 
   /**
@@ -83,31 +80,6 @@ export class UserController {
 
     return ResponseDto.success(
       'User updated',
-      this.entityMapperService.entityToDto(UserDto, updatedUser),
-    );
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
-
-  /**
-   * Handles update of user email.
-   */
-  @Put('email')
-  @UseGuards(UserExistsGuard, JwtAuthGuard, UpdateEmailPermissionGuard)
-  async updateEmail(
-    @UserParam() user: User,
-    @Body() userUpdateDto: UpdateUserDto,
-  ) {
-    const updatedUser = await this.userService.updateEmail(
-      user,
-      userUpdateDto.email,
-    );
-
-    return ResponseDto.success(
-      'User email updated',
       this.entityMapperService.entityToDto(UserDto, updatedUser),
     );
   }

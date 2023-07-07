@@ -49,7 +49,7 @@ export class User {
   @Prop({ required: true, type: PhoneNumberField })
   phoneNumber: PhoneNumberField;
 
-  @Prop({ required: true, type: Boolean, default: false })
+  @Prop({ required: true, type: Boolean, default: false, select: false })
   phoneNumberVerified: boolean;
 
   @Prop({ required: true, default: UserStatus.DRAFT })
@@ -59,7 +59,7 @@ export class User {
   photo?: MediaFile;
 
   @Prop({ default: UserType.NONE })
-  role: UserType;
+  accountType: UserType;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

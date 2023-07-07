@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './schemas/user.schema';
 import { HashService } from 'src/service/hash/hash.service';
-import { CreateUserDto } from 'src/app/user/dto/create-user.dto';
 import { UserStatus } from 'src/app/user/schemas/user.schema';
 import { UpdateUserProfile } from 'src/app/user/dto/update-user-profile.dto';
 import { UserRepositoryService } from './user-repository/user-repository.service';
@@ -10,6 +9,8 @@ import { StringGeneratorService } from '../../service/string-generator/string-ge
 import { UpdateUserPhotosDto } from 'src/app/user/dto/update-user-photos.dto';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
 import { AuthToken } from './schemas/authentication-token.schema';
+import { SetUserAccountTypeDto } from './dto/create-user-type.dto';
+import { UserType } from './schemas/user-type.enum';
 
 /**
  * Service class that handles user system logic.
@@ -36,17 +37,16 @@ export class UserService {
   }
 
   /**
-   * Handles creating of a user.
+   * Handles setting user account type.
    */
-  async create({ user, phoneNumber }: CreateUserDto) {
-    if (user === null) {
-      user = await this.userRepository.create({
-        phoneNumber,
-        status: UserStatus.DRAFT,
+  async setUserAccount(user: User, { accountType }: SetUserAccountTypeDto) {
+    if (user.accountType === UserType.NONE) {
+      await this.userRepository.setAccountType(user.id, accountType, {
+        phoneNumberVerified: true,
+        status: UserStatus.ACTIVE,
       });
     }
-
-    return user;
+    return true;
   }
 
   /**
@@ -54,10 +54,6 @@ export class UserService {
    */
   findOne(id: string) {
     return this.userRepository.findById(id);
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 
   /**

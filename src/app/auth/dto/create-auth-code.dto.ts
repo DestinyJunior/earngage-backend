@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { Allow, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
-import { CreatePhoneNumberDto } from 'src/app/user/dto/create-phone-number-dto';
+import { CreatePhoneNumberDto } from 'src/app/user/dto/create-phone-number.dto';
 import { IsUniqueUsername } from 'src/app/user/pipes/is-unique-username.pipe';
 import { User } from 'src/app/user/schemas/user.schema';
 import { ERROR_CODE } from 'src/error/error-code.constants';
