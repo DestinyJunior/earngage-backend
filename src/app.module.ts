@@ -35,22 +35,6 @@ import { CampaignSampleVideosModule } from './campaign-sample-videos/campaign-sa
     WalletModule,
     AuthModule,
     CampaignSampleVideosModule,
-    // MailerModule.forRootAsync({
-    //   imports: [ConfigProviderModule],
-    //   inject: [ConfigService],
-    //   useFactory: (configService: ConfigService) => ({
-    //     transport: {
-    //       service: 'gmail',
-    //       host: configService.get('EMAIL_HOST'),
-    //       port: configService.get('EMAIL_PORT'),
-    //       secure: true,
-    //       auth: {
-    //         user: configService.get('EMAIL_ID'),
-    //         pass: configService.get('EMAIL_PASS'),
-    //       },
-    //     },
-    //   }),
-    // }),
   ],
   controllers: [AppController],
   providers: [

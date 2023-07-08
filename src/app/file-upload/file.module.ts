@@ -6,7 +6,6 @@ import {
   PHOTO_UPLOAD_OPTIONS,
 } from 'src/app/file-upload/multer-config.service';
 import { ConfigModule } from '@nestjs/config';
-import { GcpStorageBucketService } from 'src/service/storage-bucket/gcp.storage-bucket.service';
 import { StringGeneratorService } from 'src/service/string-generator/string-generator.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MediaFile, MediaFileSchema } from './schemas/file.schema';
@@ -58,7 +57,6 @@ export class FileModule {
     const multerModule = MulterModule.registerAsync({
       imports: [photoModule],
       inject: [
-        GcpStorageBucketService,
         S3StorageBucketService,
         StringGeneratorService,
         PHOTO_UPLOAD_OPTIONS,

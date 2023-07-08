@@ -80,9 +80,7 @@ export class UserService {
     const deletePhotos = [];
 
     if (photoUploaded !== undefined && oldPhotoKey !== undefined) {
-      deletePhotos.push(
-        this.awsS3StorageBucketService.deletePhoto(oldPhotoKey),
-      );
+      deletePhotos.push(this.awsS3StorageBucketService.deleteFile(oldPhotoKey));
     }
 
     await Promise.all(deletePhotos);

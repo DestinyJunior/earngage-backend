@@ -11,7 +11,7 @@ export class S3StorageBucketService {
 
   constructor(private readonly configService: ConfigService) {}
 
-  getSavePhotoParams() {
+  getSaveFileParams() {
     return {
       s3: new S3Client({
         region: this.configService.get('AWS_S3_BUCKET_REGION'),
@@ -20,7 +20,7 @@ export class S3StorageBucketService {
     };
   }
 
-  deletePhoto(key: string) {
+  deleteFile(key: string) {
     const s3 = new S3({
       region: this.configService.get('AWS_S3_BUCKET_REGION'),
     });
@@ -31,7 +31,7 @@ export class S3StorageBucketService {
     });
   }
 
-  deletePhotos(keys: string[]) {
+  deleteFiles(keys: string[]) {
     const s3 = new S3({
       region: this.configService.get('AWS_S3_BUCKET_REGION'),
     });

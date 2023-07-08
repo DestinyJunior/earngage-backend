@@ -1,10 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CampaignUploadsRepository } from './campaign-uploads.repository';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  CampaignSampleVideos,
-  CampaignSampleVideosSchema,
-} from '../../campaign-sample-videos/schemas/sample-videos.schema';
 import { PermissionModule } from '../permission/permission.module';
 import {
   CampaignUpload,

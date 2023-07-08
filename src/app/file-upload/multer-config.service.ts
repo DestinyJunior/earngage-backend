@@ -54,10 +54,8 @@ export class MulterConfigService implements MulterOptionsFactory {
       },
 
       storage: multerS3({
-        ...this.s3StorageService.getSavePhotoParams(),
-
+        ...this.s3StorageService.getSaveFileParams(),
         contentType: multerS3.AUTO_CONTENT_TYPE,
-
         metadata(req, file, cb) {
           cb(null, { fieldName: file.fieldname });
         },
@@ -74,7 +72,9 @@ export class MulterConfigService implements MulterOptionsFactory {
               );
 
             cb(null, fileKey);
+            console.log(file);
           } catch (error) {
+            console.log(error);
             cb(error, null);
           }
         },

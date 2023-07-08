@@ -43,7 +43,7 @@ export class CampaignService {
     createUploadDtos: CreateCampaignUploadDto,
     uploadsDto: UpdateUploadFilesDto,
   ) {
-    const deletePhotos = [];
+    const deleteFiles = [];
 
     let getUploads = await this.uploadsRepository.findOneByUpload({
       campaign: campaign._id,
@@ -91,8 +91,8 @@ export class CampaignService {
       campaignCoverPhotoUploaded !== undefined &&
       oldCampaignCoverPhotoKey !== undefined
     ) {
-      deletePhotos.push(
-        this.awsS3StorageBucketService.deletePhoto(oldCampaignCoverPhotoKey),
+      deleteFiles.push(
+        this.awsS3StorageBucketService.deleteFile(oldCampaignCoverPhotoKey),
       );
     }
 
@@ -100,12 +100,12 @@ export class CampaignService {
       campaignVideoUploaded !== undefined &&
       oldCampaignVideoKey !== undefined
     ) {
-      deletePhotos.push(
-        this.awsS3StorageBucketService.deletePhoto(oldCampaignVideoKey),
+      deleteFiles.push(
+        this.awsS3StorageBucketService.deleteFile(oldCampaignVideoKey),
       );
     }
 
-    await Promise.all(deletePhotos);
+    await Promise.all(deleteFiles);
 
     return await this.campaignRepository.findById(campaign._id);
   }
@@ -115,7 +115,7 @@ export class CampaignService {
     createSampleVideosDto: CreateCampaignSampleVideosDto,
     sampleVideosDto: UpdateSampleVideoFilesDto,
   ) {
-    const deletePhotos = [];
+    const deleteFiles = [];
 
     let getUploads = await this.sampleVideosRepository.findOneBySample({
       campaign: campaign._id,
@@ -199,36 +199,36 @@ export class CampaignService {
     );
 
     if (sampleOneUploaded !== undefined && oldSampleOneKey !== undefined) {
-      deletePhotos.push(
-        this.awsS3StorageBucketService.deletePhoto(oldSampleOneKey),
+      deleteFiles.push(
+        this.awsS3StorageBucketService.deleteFile(oldSampleOneKey),
       );
     }
 
     if (sampleTwoUploaded !== undefined && oldSampleTwoKey !== undefined) {
-      deletePhotos.push(
-        this.awsS3StorageBucketService.deletePhoto(oldSampleTwoKey),
+      deleteFiles.push(
+        this.awsS3StorageBucketService.deleteFile(oldSampleTwoKey),
       );
     }
 
     if (sampleThreeUploaded !== undefined && oldSampleThreeKey !== undefined) {
-      deletePhotos.push(
-        this.awsS3StorageBucketService.deletePhoto(oldSampleThreeKey),
+      deleteFiles.push(
+        this.awsS3StorageBucketService.deleteFile(oldSampleThreeKey),
       );
     }
 
     if (sampleFourUploaded !== undefined && oldSampleFourKey !== undefined) {
-      deletePhotos.push(
-        this.awsS3StorageBucketService.deletePhoto(oldSampleFourKey),
+      deleteFiles.push(
+        this.awsS3StorageBucketService.deleteFile(oldSampleFourKey),
       );
     }
 
     if (sampleFiveUploaded !== undefined && oldSampleFiveKey !== undefined) {
-      deletePhotos.push(
-        this.awsS3StorageBucketService.deletePhoto(oldSampleFiveKey),
+      deleteFiles.push(
+        this.awsS3StorageBucketService.deleteFile(oldSampleFiveKey),
       );
     }
 
-    await Promise.all(deletePhotos);
+    await Promise.all(deleteFiles);
 
     return await this.campaignRepository.findById(campaign._id);
   }
