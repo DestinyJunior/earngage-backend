@@ -17,9 +17,6 @@ export class UserDto extends SchemaDto {
   @Type(() => PhotoDto)
   photo?: PhotoDto;
 
-  @Type(() => PhotoDto)
-  headerPhoto?: PhotoDto;
-
   username: string;
 
   @Type(() => PhoneNumberField)
