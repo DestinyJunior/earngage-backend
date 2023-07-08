@@ -25,14 +25,7 @@ export class UserPermissionFactoryService {
     can(
       [PermissionAction.Update, PermissionAction.ReadOne],
       User,
-      [
-        'firstName',
-        'lastName',
-        'username',
-        'phoneNumber',
-        'phoneNumberVerified',
-        'accountType',
-      ],
+      ['username', 'phoneNumber', 'phoneNumberVerified', 'accountType'],
       { id: user.id },
     );
 
@@ -43,6 +36,7 @@ export class UserPermissionFactoryService {
           PermissionAction.ReadOne,
           PermissionAction.Update,
           PermissionAction.Delete,
+          PermissionAction.Create,
         ],
         Campaign,
       );

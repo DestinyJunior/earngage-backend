@@ -6,10 +6,7 @@ import {
 } from './schemas/campaign-upload.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateQuery } from 'mongoose';
-import {
-  CampaignSampleVideos,
-  CampaignSampleVideosDocument,
-} from './schemas/sample-videos.schema';
+import { CampaignSampleVideos } from '../../campaign-sample-videos/schemas/sample-videos.schema';
 import { MgFilterQuery } from 'src/types/mongoose.types';
 
 @Injectable()
@@ -17,16 +14,10 @@ export class CampaignUploadsRepository {
   constructor(
     @InjectModel(CampaignUpload.name)
     private uploadModel: Model<CampaignUploadDocument>,
-    @InjectModel(CampaignSampleVideos.name)
-    private sampleVideosModel: Model<CampaignSampleVideosDocument>,
   ) {}
 
   createUploads(createCampaignUploadDto: CreateCampaignUploadDto) {
     return this.uploadModel.create(createCampaignUploadDto);
-  }
-
-  createSampleVideos(createCampaignUploadDto: CreateCampaignUploadDto) {
-    return this.sampleVideosModel.create(createCampaignUploadDto);
   }
 
   findAllUploads() {
@@ -42,7 +33,7 @@ export class CampaignUploadsRepository {
   }
 
   findOneByUpload(params: MgFilterQuery<CampaignSampleVideos>) {
-    return this.sampleVideosModel.findById(params);
+    return this.uploadModel.findOne(params);
   }
 
   updateUploads(
@@ -52,10 +43,13 @@ export class CampaignUploadsRepository {
     return this.uploadModel.findOneAndUpdate(params, payload);
   }
 
-  updateSampleVideos(
-    params: MgFilterQuery<CampaignSampleVideos>,
-    payload: UpdateQuery<CampaignSampleVideos>,
-  ) {
-    return this.sampleVideosModel.findOneAndUpdate(params, payload);
+  /**
+   * Checks if a campaign uploads entity with a photo name exists.
+   */
+  async existsUploadByPhotoName(photoName: string) {
+    const user = await this.uploadModel
+      .findOne({ 'campaignCover.name': photoName })
+      .exec();
+    return user !== null;
   }
 }

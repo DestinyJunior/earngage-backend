@@ -22,6 +22,7 @@ import { S3StorageBucketService } from './service/storage-bucket/s3.storage-buck
 import { HashService } from './service/hash/hash.service';
 import { EntityMapperService } from './service/entity-mapper/entity-mapper.service';
 import { AuthModule } from './app/auth/auth.module';
+import { CampaignSampleVideosModule } from './campaign-sample-videos/campaign-sample-videos.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AuthModule } from './app/auth/auth.module';
     WalletTransactionModule,
     WalletModule,
     AuthModule,
+    CampaignSampleVideosModule,
     // MailerModule.forRootAsync({
     //   imports: [ConfigProviderModule],
     //   inject: [ConfigService],

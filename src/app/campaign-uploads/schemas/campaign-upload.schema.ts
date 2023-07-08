@@ -1,29 +1,32 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types as MongoTypes } from 'mongoose';
-import { Campaign } from 'src/app/campaign/schemas/campaign.schema';
 import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
-import { CampaignSampleVideos } from './sample-videos.schema';
+import { CampaignSampleVideos } from '../../../campaign-sample-videos/schemas/sample-videos.schema';
 
 export type CampaignUploadDocument = CampaignUpload & Document;
 
 @Schema({ timestamps: true })
 export class CampaignUpload {
+  static readonly FILE_PATH = 'uploads/';
+
+  id: string;
+
   @Prop({
     required: true,
-    ref: Campaign.name,
+    ref: 'Campaign',
     type: MongoTypes.ObjectId,
     unique: true,
   })
   campaign: MongoTypes.ObjectId;
 
-  @Prop({ required: true, type: MediaFile })
+  @Prop({ required: false, type: MediaFile })
   campaignVideo: MediaFile;
 
-  @Prop({ required: true, type: MediaFile })
+  @Prop({ required: false, type: MediaFile })
   campaignCover: MediaFile;
 
   @Prop({
-    required: true,
+    required: false,
     ref: CampaignSampleVideos.name,
     type: MongoTypes.ObjectId,
   })

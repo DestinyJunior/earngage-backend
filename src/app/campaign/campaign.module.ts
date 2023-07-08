@@ -8,6 +8,9 @@ import { PermissionModule } from '../permission/permission.module';
 import { UserModule } from '../user/user.module';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
 import { IsUniqueCampaignTitlePipe } from './pipes/is-unique-title.pipe';
+import { CampaignUploadsModule } from '../campaign-uploads/campaign-uploads.module';
+import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
+import { CampaignSampleVideosModule } from 'src/campaign-sample-videos/campaign-sample-videos.module';
 
 @Module({
   imports: [
@@ -16,6 +19,8 @@ import { IsUniqueCampaignTitlePipe } from './pipes/is-unique-title.pipe';
     ]),
     PermissionModule,
     UserModule,
+    CampaignUploadsModule,
+    CampaignSampleVideosModule,
   ],
   controllers: [CampaignController],
   providers: [
@@ -23,6 +28,7 @@ import { IsUniqueCampaignTitlePipe } from './pipes/is-unique-title.pipe';
     CampaignService,
     CampaignRepository,
     IsUniqueCampaignTitlePipe,
+    S3StorageBucketService,
   ],
 })
 export class CampaignModule {}

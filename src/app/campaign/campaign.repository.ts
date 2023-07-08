@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
 import { Campaign, CampaignDocument } from './schemas/campaign.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types as MongoTypes, UpdateQuery } from 'mongoose';
+import { MgFilterQuery } from 'src/types/mongoose.types';
 
 @Injectable()
 export class CampaignRepository {
@@ -23,12 +24,16 @@ export class CampaignRepository {
     return this.campaignModel.find();
   }
 
-  findOne(id: string) {
+  findOne(params: MgFilterQuery<Campaign>) {
+    return this.campaignModel.findOne(params);
+  }
+
+  findById(id: MongoTypes.ObjectId) {
     return this.campaignModel.findById(id);
   }
 
-  update(id: string, updateCampaignDto: UpdateCampaignDto) {
-    return this.campaignModel.findByIdAndUpdate(id, updateCampaignDto);
+  update(id: MongoTypes.ObjectId, payload: UpdateQuery<Campaign>) {
+    return this.campaignModel.findByIdAndUpdate(id, payload);
   }
 
   remove(id: string) {

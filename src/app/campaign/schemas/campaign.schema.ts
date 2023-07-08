@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types as MongoTypes } from 'mongoose';
 import { CampaignBudget } from 'src/app/campaign-budget/schemas/campaign-budget.schemas';
 import { CampaignUpload } from 'src/app/campaign-uploads/schemas/campaign-upload.schema';
-import { CampaignSampleVideos } from 'src/app/campaign-uploads/schemas/sample-videos.schema';
+import { CampaignSampleVideos } from 'src/campaign-sample-videos/schemas/sample-videos.schema';
 import { User } from 'src/app/user/schemas/user.schema';
 
 export type CampaignDocument = Campaign & Document;
@@ -39,6 +39,9 @@ export class Campaign {
   @Prop({ required: true })
   medium: string;
 
+  @Prop({ required: false, default: false })
+  isPinned?: boolean;
+
   @Prop({
     required: true,
     default: CAMPAIGN_STATUS.DRAFT,
@@ -66,6 +69,10 @@ export class Campaign {
     type: MongoTypes.ObjectId,
   })
   budget?: MongoTypes.ObjectId;
+}
+
+export class CampaignWithId extends Campaign {
+  _id: MongoTypes.ObjectId;
 }
 
 export const CampaignSchema = SchemaFactory.createForClass(Campaign);

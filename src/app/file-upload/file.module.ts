@@ -22,7 +22,7 @@ type PhotoUploadAsyncOptions = {
 };
 
 /**
- * Photo Module that dynamically configures the Multer module.
+ * File Module that dynamically configures the Multer module.
  */
 @Module({
   imports: [
@@ -40,7 +40,6 @@ export class FileModule {
       module: FileModule,
       imports: [ConfigModule, ...options.import],
       providers: [
-        GcpStorageBucketService,
         StringGeneratorService,
         S3StorageBucketService,
         {
@@ -51,7 +50,6 @@ export class FileModule {
       ],
       exports: [
         S3StorageBucketService,
-        GcpStorageBucketService,
         StringGeneratorService,
         PHOTO_UPLOAD_OPTIONS,
       ],
