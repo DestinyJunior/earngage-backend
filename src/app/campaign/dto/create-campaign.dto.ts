@@ -1,11 +1,15 @@
-import { IsNotEmpty, Length, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 import { ERROR_CODE } from 'src/error/error-code.constants';
 import {
   requiredErrorMessage,
   validationErrorMessage,
 } from 'src/error/validation-error.function';
+import { IsUniqueCampaignTitle } from '../pipes/is-unique-title.pipe';
 
 export class CreateCampaignDto {
+  @IsUniqueCampaignTitle(
+    validationErrorMessage('title already exists', ERROR_CODE.FIELD_LENGTH),
+  )
   @Length(
     10,
     30,

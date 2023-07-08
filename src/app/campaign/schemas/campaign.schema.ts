@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types as MongoTypes } from 'mongoose';
+import { CampaignBudget } from 'src/app/campaign-budget/schemas/campaign-budget.schemas';
+import { CampaignUpload } from 'src/app/campaign-uploads/schemas/campaign-upload.schema';
 import { User } from 'src/app/user/schemas/user.schema';
 
 export type CampaignDocument = Campaign & Document;
@@ -15,8 +17,11 @@ export class Campaign {
   @Prop({ required: true, ref: User.name, type: MongoTypes.ObjectId })
   creator: MongoTypes.ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true, trim: true })
   title: string;
+
+  @Prop({ required: true })
+  slug: string;
 
   @Prop({ required: true })
   subTitle: string;
@@ -39,6 +44,20 @@ export class Campaign {
     enum: CAMPAIGN_STATUS,
   })
   status: string;
+
+  @Prop({
+    required: false,
+    ref: CampaignUpload.name,
+    type: MongoTypes.ObjectId,
+  })
+  uploads?: MongoTypes.ObjectId;
+
+  @Prop({
+    required: false,
+    ref: CampaignBudget.name,
+    type: MongoTypes.ObjectId,
+  })
+  budget?: MongoTypes.ObjectId;
 }
 
 export const CampaignSchema = SchemaFactory.createForClass(Campaign);

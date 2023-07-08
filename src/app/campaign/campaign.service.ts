@@ -14,22 +14,23 @@ export class CampaignService {
       ...createCampaignDto,
       creator: new MongoTypes.ObjectId(user.id),
       status: CAMPAIGN_STATUS.DRAFT,
+      slug: createCampaignDto.title.toLowerCase().split(' ').join('-'),
     });
   }
 
   findAll() {
-    return `This action returns all campaign`;
+    return this.campaignRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} campaign`;
+  findOne(id: string) {
+    return this.campaignRepository.findOne(id);
   }
 
-  update(id: number, updateCampaignDto: UpdateCampaignDto) {
-    return `This action updates a #${id} campaign`;
+  updateCampaignDetails(id: string, updateCampaignDto: UpdateCampaignDto) {
+    return this.campaignRepository.update(id, updateCampaignDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} campaign`;
+  remove(id: string) {
+    return this.campaignRepository.remove(id);
   }
 }

@@ -7,6 +7,7 @@ import { CampaignRepository } from './campaign.repository';
 import { PermissionModule } from '../permission/permission.module';
 import { UserModule } from '../user/user.module';
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
+import { IsUniqueCampaignTitlePipe } from './pipes/is-unique-title.pipe';
 
 @Module({
   imports: [
@@ -17,6 +18,11 @@ import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.ser
     UserModule,
   ],
   controllers: [CampaignController],
-  providers: [EntityMapperService, CampaignService, CampaignRepository],
+  providers: [
+    EntityMapperService,
+    CampaignService,
+    CampaignRepository,
+    IsUniqueCampaignTitlePipe,
+  ],
 })
 export class CampaignModule {}

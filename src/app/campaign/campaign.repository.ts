@@ -10,6 +10,11 @@ export class CampaignRepository {
     @InjectModel(Campaign.name) private campaignModel: Model<CampaignDocument>,
   ) {}
 
+  async existsByTitle(title: string) {
+    const campaign = await this.campaignModel.findOne({ title }).exec();
+    return campaign !== null;
+  }
+
   create(createCampaignDto: Campaign) {
     return this.campaignModel.create(createCampaignDto);
   }
@@ -18,8 +23,8 @@ export class CampaignRepository {
     return this.campaignModel.find();
   }
 
-  findOne() {
-    return this.campaignModel.findOne();
+  findOne(id: string) {
+    return this.campaignModel.findById(id);
   }
 
   update(id: string, updateCampaignDto: UpdateCampaignDto) {
