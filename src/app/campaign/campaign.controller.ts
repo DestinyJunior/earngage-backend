@@ -28,8 +28,9 @@ import { UpdateUploadFilesDto } from '../campaign-uploads/dto/create-upload-file
 import { CampaignExistsGuard } from './guards/is-campaign-exists.guard';
 import { CreateCampaignPermissionGuard } from './guards/create-campaign-permission.guard';
 import { Types as MongoTypes } from 'mongoose';
-import { CreateCampaignSampleVideosDto } from 'src/campaign-sample-videos/dto/create-campaign-sample-video.dto';
-import { UpdateSampleVideoFilesDto } from 'src/campaign-sample-videos/dto/create-sample-videos-files.dto';
+import { CreateCampaignSampleVideosDto } from 'src/app/campaign-sample-videos/dto/create-campaign-sample-video.dto';
+import { UpdateSampleVideoFilesDto } from 'src/app/campaign-sample-videos/dto/create-sample-videos-files.dto';
+import { CampaignUploadsExistsGuard } from './guards/is-campaign-upload-exists.guard';
 
 @Controller('campaign')
 export class CampaignController {
@@ -78,7 +79,6 @@ export class CampaignController {
     @Body() createCampaignDto: CreateCampaignUploadDto,
     @UploadedFiles() uploadDto: UpdateUploadFilesDto,
   ) {
-    console.log(uploadDto);
     const campaignData = await this.campaignService.addUploads(
       campaign,
       createCampaignDto,
@@ -97,6 +97,7 @@ export class CampaignController {
     JwtAuthGuard,
     CreateCampaignPermissionGuard,
     CampaignExistsGuard,
+    CampaignUploadsExistsGuard,
   )
   @UseInterceptors(
     FileFieldsInterceptor(
@@ -118,7 +119,7 @@ export class CampaignController {
   async addOrUpdateSampleVideos(
     @DataParam('campaign') campaign: CampaignWithId,
     @Body() createSampleVideosDto: CreateCampaignSampleVideosDto,
-    @Body() sampleVideosDto: UpdateSampleVideoFilesDto,
+    @UploadedFiles() sampleVideosDto: UpdateSampleVideoFilesDto,
   ): Promise<ResponseDto> {
     const campaignData = await this.campaignService.addSampleVideos(
       campaign,

@@ -5,12 +5,12 @@ import {
   PhotoUploadOptions,
   PHOTO_UPLOAD_OPTIONS,
 } from 'src/app/file-upload/multer-config.service';
-import { ConfigModule } from '@nestjs/config';
 import { StringGeneratorService } from 'src/service/string-generator/string-generator.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MediaFile, MediaFileSchema } from './schemas/file.schema';
 import { FileService } from './file.service';
 import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
+import { ConfigProviderModule } from 'src/provider/config.provider';
 
 type PhotoUploadAsyncOptions = {
   inject?: any[];
@@ -35,9 +35,9 @@ type PhotoUploadAsyncOptions = {
 })
 export class FileModule {
   static registerAsync(options: PhotoUploadAsyncOptions): DynamicModule {
-    const photoModule: DynamicModule = {
+    const fileModule: DynamicModule = {
       module: FileModule,
-      imports: [ConfigModule, ...options.import],
+      imports: [ConfigProviderModule, ...options.import],
       providers: [
         StringGeneratorService,
         S3StorageBucketService,
@@ -55,7 +55,7 @@ export class FileModule {
     };
 
     const multerModule = MulterModule.registerAsync({
-      imports: [photoModule],
+      imports: [fileModule],
       inject: [
         S3StorageBucketService,
         StringGeneratorService,
@@ -64,9 +64,9 @@ export class FileModule {
       useClass: MulterConfigService,
     });
 
-    photoModule.imports.push(multerModule);
-    photoModule.exports.push(multerModule);
+    fileModule.imports.push(multerModule);
+    fileModule.exports.push(multerModule);
 
-    return photoModule;
+    return fileModule;
   }
 }

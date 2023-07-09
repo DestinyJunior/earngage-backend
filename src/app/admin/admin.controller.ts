@@ -6,7 +6,6 @@ import {
   Put,
   UseGuards,
   UseInterceptors,
-  UploadedFile,
 } from '@nestjs/common';
 import { AdminDto } from 'src/app/admin/dto/admin.dto';
 import { ResponseDto } from 'src/dto/response.dto';

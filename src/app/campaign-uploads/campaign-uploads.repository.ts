@@ -6,7 +6,7 @@ import {
 } from './schemas/campaign-upload.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateQuery } from 'mongoose';
-import { CampaignSampleVideos } from '../../campaign-sample-videos/schemas/sample-videos.schema';
+import { CampaignSampleVideos } from '../campaign-sample-videos/schemas/sample-videos.schema';
 import { MgFilterQuery } from 'src/types/mongoose.types';
 
 @Injectable()
@@ -47,9 +47,9 @@ export class CampaignUploadsRepository {
    * Checks if a campaign uploads entity with a photo name exists.
    */
   async existsUploadByPhotoName(photoName: string) {
-    const user = await this.uploadModel
+    const upload = await this.uploadModel
       .findOne({ 'campaignCover.name': photoName })
       .exec();
-    return user !== null;
+    return upload !== null;
   }
 }

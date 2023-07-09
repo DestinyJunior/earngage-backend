@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
  */
 @Injectable()
 export class S3StorageBucketService {
-  static readonly PHOTO_PATH = 'images/';
+  static readonly FILE_PATH = 'files/';
 
   constructor(private readonly configService: ConfigService) {}
 

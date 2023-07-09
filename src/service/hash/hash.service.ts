@@ -6,8 +6,8 @@ import * as bcrypt from 'bcrypt';
  */
 @Injectable()
 export class HashService {
-  hashString(password: string) {
-    return bcrypt.hash(password, 10);
+  hashString(payload: string) {
+    return bcrypt.hash(payload, 10);
   }
 
   compareString(plain: string, hash: string) {
