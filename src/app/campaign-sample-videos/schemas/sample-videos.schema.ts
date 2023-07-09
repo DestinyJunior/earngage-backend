@@ -6,7 +6,7 @@ export type CampaignSampleVideosDocument = CampaignSampleVideos & Document;
 
 @Schema({ timestamps: true })
 export class CampaignSampleVideos {
-  static readonly FILE_PATH = 'uploads/sample-videos/';
+  static readonly FILE_PATH = 'uploads/samplevideos/';
 
   id: string;
 

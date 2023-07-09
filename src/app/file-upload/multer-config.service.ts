@@ -36,7 +36,7 @@ export class MulterConfigService implements MulterOptionsFactory {
   async createMulterOptions(): Promise<MulterModuleOptions> {
     return {
       fileFilter(req, file, cb) {
-        if (file.mimetype.split('/')[0] !== 'image') {
+        if (!['image', 'video'].includes(file.mimetype.split('/')[0])) {
           cb(
             validationErrorFactory([
               createValidationError(
@@ -55,6 +55,7 @@ export class MulterConfigService implements MulterOptionsFactory {
 
       storage: multerS3({
         ...this.s3StorageService.getSaveFileParams(),
+        // acl: 'read-public',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         metadata(req, file, cb) {
           cb(null, { fieldName: file.fieldname });
@@ -67,14 +68,12 @@ export class MulterConfigService implements MulterOptionsFactory {
               .generate(
                 MediaFile.NAME_CONFIG,
                 true,
-                `${S3StorageBucketService.PHOTO_PATH}${this.uploadOptions.namePrefix}`,
+                `${S3StorageBucketService.FILE_PATH}${this.uploadOptions.namePrefix}`,
                 extname(file.originalname),
               );
 
             cb(null, fileKey);
-            console.log(file);
           } catch (error) {
-            console.log(error);
             cb(error, null);
           }
         },

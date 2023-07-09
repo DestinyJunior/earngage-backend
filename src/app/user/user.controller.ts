@@ -66,14 +66,20 @@ export class UserController {
    */
   @Put('update-profile')
   @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'photo', maxCount: 1 }], {
-      limits: {
-        files: 1,
-        fileSize: 1024 * 1024,
+    FileFieldsInterceptor(
+      [
+        { name: 'photo', maxCount: 1 },
+        // { name: 'headerPhoto', maxCount: 1 },
+      ],
+      {
+        limits: {
+          files: 1,
+          fileSize: 1024 * 1024,
+        },
       },
-    }),
+    ),
   )
-  @UseGuards(UserExistsGuard, JwtAuthGuard, UpdateUserPermissionGuard)
+  @UseGuards(UserExistsGuard, JwtAuthGuard)
   async update(
     @UserParam() user: User,
     @Body() updateUserDto: UpdateUserProfile,

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types as MongoTypes } from 'mongoose';
 import { CampaignBudget } from 'src/app/campaign-budget/schemas/campaign-budget.schemas';
 import { CampaignUpload } from 'src/app/campaign-uploads/schemas/campaign-upload.schema';
-import { CampaignSampleVideos } from 'src/campaign-sample-videos/schemas/sample-videos.schema';
+import { CampaignSampleVideos } from 'src/app/campaign-sample-videos/schemas/sample-videos.schema';
 import { User } from 'src/app/user/schemas/user.schema';
 
 export type CampaignDocument = Campaign & Document;

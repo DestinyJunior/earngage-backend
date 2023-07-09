@@ -11,20 +11,20 @@ import { IsValidEmailVerificationTokenPipe } from './pipes/is-valid-email-verifi
 import { HashService } from 'src/service/hash/hash.service';
 import { PermissionModule } from 'src/app/permission/permission.module';
 import { FileModule } from 'src/app/file-upload/file.module';
-import { ConfigModule } from '@nestjs/config';
 import { IsValidEmailPipe } from 'src/app/user/pipes/is-valid-email.pipe';
 import { IsNotExpiredPasswordResetTokenPipe } from 'src/app/user/pipes/is-not-expired-password-reset-token.pipe';
 import {
   AuthToken,
   AuthTokenSchema,
 } from './schemas/authentication-token.schema';
+import { ConfigProviderModule } from 'src/provider/config.provider';
 
 /**
  * User module configurations.
  */
 @Module({
   imports: [
-    ConfigModule,
+    ConfigProviderModule,
     FileModule.registerAsync({
       import: [UserModule],
       inject: [UserRepositoryService],

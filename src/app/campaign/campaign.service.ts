@@ -15,9 +15,9 @@ import { CreateCampaignUploadDto } from '../campaign-uploads/dto/create-campaign
 import { EntityMapperService } from 'src/service/entity-mapper/entity-mapper.service';
 import { S3StorageBucketService } from 'src/service/storage-bucket/s3.storage-bucket.service';
 import { MgFilterQuery } from 'src/types/mongoose.types';
-import { CampaignSampleVideosRepository } from 'src/campaign-sample-videos/campaign-sample-videos.repository';
-import { CreateCampaignSampleVideosDto } from 'src/campaign-sample-videos/dto/create-campaign-sample-video.dto';
-import { UpdateSampleVideoFilesDto } from 'src/campaign-sample-videos/dto/create-sample-videos-files.dto';
+import { CampaignSampleVideosRepository } from 'src/app/campaign-sample-videos/campaign-sample-videos.repository';
+import { CreateCampaignSampleVideosDto } from 'src/app/campaign-sample-videos/dto/create-campaign-sample-video.dto';
+import { UpdateSampleVideoFilesDto } from 'src/app/campaign-sample-videos/dto/create-sample-videos-files.dto';
 
 @Injectable()
 export class CampaignService {
@@ -117,21 +117,21 @@ export class CampaignService {
   ) {
     const deleteFiles = [];
 
-    let getUploads = await this.sampleVideosRepository.findOneBySample({
+    let getSampleVids = await this.sampleVideosRepository.findOneBySample({
       campaign: campaign._id,
     });
 
-    if (!getUploads) {
-      getUploads = await this.sampleVideosRepository.createSampleVideos({
+    if (!getSampleVids) {
+      getSampleVids = await this.sampleVideosRepository.createSampleVideos({
         campaign: campaign._id,
       });
     }
 
-    const oldSampleOneKey = getUploads.sampleOne?.name;
-    const oldSampleTwoKey = getUploads.sampleTwo?.name;
-    const oldSampleThreeKey = getUploads.sampleThree?.name;
-    const oldSampleFourKey = getUploads.sampleFive?.name;
-    const oldSampleFiveKey = getUploads.sampleFive?.name;
+    const oldSampleOneKey = getSampleVids.sampleOne?.name;
+    const oldSampleTwoKey = getSampleVids.sampleTwo?.name;
+    const oldSampleThreeKey = getSampleVids.sampleThree?.name;
+    const oldSampleFourKey = getSampleVids.sampleFive?.name;
+    const oldSampleFiveKey = getSampleVids.sampleFive?.name;
 
     const sampleOneUploaded =
       sampleVideosDto?.sampleOne !== undefined &&
@@ -184,10 +184,6 @@ export class CampaignService {
         );
     }
 
-    if (!createSampleVideosDto?.campaign) {
-      createSampleVideosDto.campaign = campaign._id;
-    }
-
     await this.sampleVideosRepository.updateSampleVideos(
       { campaign: campaign._id },
       createSampleVideosDto,
@@ -195,7 +191,7 @@ export class CampaignService {
 
     await this.uploadsRepository.updateUploads(
       { campaign: campaign._id },
-      { sampleVideos: getUploads._id },
+      { sampleVideos: getSampleVids._id },
     );
 
     if (sampleOneUploaded !== undefined && oldSampleOneKey !== undefined) {

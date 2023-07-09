@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types as MongoTypes } from 'mongoose';
 import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
-import { CampaignSampleVideos } from '../../../campaign-sample-videos/schemas/sample-videos.schema';
+import { CampaignSampleVideos } from '../../campaign-sample-videos/schemas/sample-videos.schema';
 
 export type CampaignUploadDocument = CampaignUpload & Document;
 
