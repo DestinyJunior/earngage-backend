@@ -17,6 +17,7 @@ import { CampaignUploadsRepository } from '../campaign-uploads/campaign-uploads.
 import { CampaignUpload } from '../campaign-uploads/schemas/campaign-upload.schema';
 import { CampaignSampleVideosRepository } from '../campaign-sample-videos/campaign-sample-videos.repository';
 import { CampaignSampleVideos } from '../campaign-sample-videos/schemas/sample-videos.schema';
+import { CampaignBudgetModule } from '../campaign-budget/campaign-budget.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CampaignSampleVideos } from '../campaign-sample-videos/schemas/sample-v
     UserModule,
     CampaignUploadsModule,
     CampaignSampleVideosModule,
+    CampaignBudgetModule,
     FileModule.registerAsync({
       import: [CampaignUploadsModule],
       inject: [CampaignUploadsRepository],

@@ -30,7 +30,10 @@ export class AuthController {
   @Post('user/get-code')
   @HttpCode(HttpStatus.OK)
   async userLoginCode(@Body() authData: CreateLoginAuthCode) {
-    await this.authService.getAuthCode(authData.phoneNumber, authData.username);
+    await this.authService.getAuthCode(
+      authData.phoneNumber,
+      authData?.username,
+    );
     return ResponseDto.success('Auth code sent');
   }
 

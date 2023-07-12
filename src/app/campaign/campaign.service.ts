@@ -18,6 +18,8 @@ import { MgFilterQuery } from 'src/types/mongoose.types';
 import { CampaignSampleVideosRepository } from 'src/app/campaign-sample-videos/campaign-sample-videos.repository';
 import { CreateCampaignSampleVideosDto } from 'src/app/campaign-sample-videos/dto/create-campaign-sample-video.dto';
 import { UpdateSampleVideoFilesDto } from 'src/app/campaign-sample-videos/dto/create-sample-videos-files.dto';
+import { CampaignBudgetRepository } from '../campaign-budget/campaign-budget.repository';
+import { CreateCampaignBudgetDto } from '../campaign-budget/dto/create-campaign-budget.dto';
 
 @Injectable()
 export class CampaignService {
@@ -25,6 +27,7 @@ export class CampaignService {
     private readonly campaignRepository: CampaignRepository,
     private readonly uploadsRepository: CampaignUploadsRepository,
     private readonly sampleVideosRepository: CampaignSampleVideosRepository,
+    private readonly budgetRepository: CampaignBudgetRepository,
     private readonly entityMapperService: EntityMapperService,
     private readonly awsS3StorageBucketService: S3StorageBucketService,
   ) {}
@@ -229,8 +232,40 @@ export class CampaignService {
     return await this.campaignRepository.findById(campaign._id);
   }
 
+  async addBudget(
+    campaign: CampaignWithId,
+    createBudget: CreateCampaignBudgetDto,
+  ) {
+    let getBudget = await this.budgetRepository.findOne({
+      campaign: campaign._id,
+    });
+
+    if (!getBudget) {
+      getBudget = await this.budgetRepository.createWithCampaign({
+        campaign: campaign._id,
+      });
+    }
+
+    await this.budgetRepository.updateOne(
+      { campaign: campaign._id },
+      createBudget,
+    );
+
+    if (!campaign?.budget) {
+      await this.campaignRepository.update(campaign._id, {
+        budget: getBudget._id,
+      });
+    }
+
+    return await this.campaignRepository.findById(campaign._id);
+  }
+
   findAll() {
     return this.campaignRepository.findAll();
+  }
+
+  findCreatorCampaigns(creator: User) {
+    return this.campaignRepository.findAll({ creator: creator.id });
   }
 
   findOne(params: MgFilterQuery<Campaign>) {

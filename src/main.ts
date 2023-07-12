@@ -9,7 +9,7 @@ async function bootstrap() {
     rawBody: true,
   });
 
-  app.setGlobalPrefix('v1/api');
+  app.setGlobalPrefix('api/v1');
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));

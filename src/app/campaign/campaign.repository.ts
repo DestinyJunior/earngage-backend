@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateCampaignDto } from './dto/update-campaign.dto';
 import { Campaign, CampaignDocument } from './schemas/campaign.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types as MongoTypes, UpdateQuery } from 'mongoose';
@@ -20,8 +19,8 @@ export class CampaignRepository {
     return this.campaignModel.create(createCampaignDto);
   }
 
-  findAll() {
-    return this.campaignModel.find();
+  findAll(params?: MgFilterQuery<Campaign>) {
+    return this.campaignModel.find(params);
   }
 
   findOne(params: MgFilterQuery<Campaign>) {

@@ -1,24 +1,33 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types as MongoTypes } from 'mongoose';
 
 export type CampaignBudgetDocument = CampaignBudget & Document;
 
 class EstimationData {
-  @Prop({ required: true })
+  @Prop({ type: Number })
   min: number;
 
-  @Prop({ required: true })
+  @Prop({ type: Number })
   max: number;
 }
 
 @Schema({ timestamps: true })
 export class CampaignBudget {
-  @Prop({ required: true })
+  @Prop({
+    required: true,
+    ref: 'Campaign',
+    type: MongoTypes.ObjectId,
+    unique: true,
+  })
+  campaign: MongoTypes.ObjectId;
+
+  @Prop({ type: Number })
   budgetAmount: number;
 
-  @Prop({ required: true, type: EstimationData })
+  @Prop({ type: EstimationData })
   estimatedReach: EstimationData;
 
-  @Prop({ required: true, type: EstimationData })
+  @Prop({ type: EstimationData })
   estimatedViews: EstimationData;
 }
 

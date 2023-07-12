@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Admin } from 'src/app/admin/schemas/admin.schema';
 import { User, UserStatus } from 'src/app/user/schemas/user.schema';
@@ -10,6 +10,10 @@ import { UserRepositoryService } from 'src/app/user/user-repository/user-reposit
 import { AdminRepositoryService } from 'src/app/admin/admin.repository';
 import { CreatePhoneNumberDto } from '../user/dto/create-phone-number.dto';
 import { TwilioSmsService } from 'src/service/sms/twilio.sms.service';
+import { ResponseDto } from 'src/dto/response.dto';
+import { ERROR_CODE } from 'src/error/error-code.constants';
+import { ConfigService } from '@nestjs/config';
+import { Environment } from 'src/validation/env.validation';
 
 /**
  * Service class that handles authentication system logic.
@@ -23,6 +27,7 @@ export class AuthService {
     private readonly adminRepository: AdminRepositoryService,
     private readonly stringGeneratorService: StringGeneratorService,
     private readonly twilioSmsService: TwilioSmsService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -39,23 +44,53 @@ export class AuthService {
   /**
    * handles generation of auth code.
    */
-  async getAuthCode(phoneNumber: CreatePhoneNumberDto, username?: string) {
-    // send sms here
+  async getAuthCode(
+    phoneNumber: CreatePhoneNumberDto,
+    username?: string | null | undefined,
+  ) {
+    // get user with phone
     const userWithPhone = await this.userRepository.existsByPhone(phoneNumber);
 
-    if (!userWithPhone) {
-      // create new user with phone
-      await this.userRepository.create({
-        phoneNumber,
-        username,
-        status: UserStatus.DRAFT,
-      });
+    if (userWithPhone === false) {
+      // create new user with phone with valid data
+      if (username && username != undefined) {
+        await this.userRepository.create({
+          phoneNumber,
+          username,
+          status: UserStatus.DRAFT,
+        });
+      } else {
+        throw new BadRequestException(
+          ResponseDto.error(
+            'User needs signup',
+            ERROR_CODE.CREDENTIALS_MISSING,
+          ),
+        );
+      }
     }
 
     const getUserData = await this.userRepository.findByPhone(phoneNumber);
 
     // create and send auth code
-    const code = await this.generateTokenVerificationToken();
+    let code: string;
+
+    const node_env: string = (await this.configService.get(
+      'NODE_ENV',
+    )) as string;
+
+    console.log(node_env);
+    if (
+      node_env &&
+      ![
+        Environment.Development.toString(),
+        Environment.Test.toString(),
+      ].includes(node_env)
+    ) {
+      code = await this.generateTokenVerificationToken();
+    } else {
+      code = '12345';
+    }
+
     const token = await this.hashService.hashString(code);
     const expireDate = new Date();
 
@@ -73,10 +108,18 @@ export class AuthService {
     // send code
     const messageBody = `Your one time login access code for Earngage: ${code}`;
 
-    await this.twilioSmsService.sendSms({
-      to: phoneNumber.number,
-      body: messageBody,
-    });
+    if (
+      node_env &&
+      ![
+        Environment.Development.toString(),
+        Environment.Test.toString(),
+      ].includes(node_env)
+    ) {
+      await this.twilioSmsService.sendSms({
+        to: phoneNumber.number,
+        body: messageBody,
+      });
+    }
 
     return true;
   }
@@ -147,6 +190,8 @@ export class AuthService {
 
     return {
       userId: user.id,
+      completedOnboarding: user.status === UserStatus.DRAFT ? false : true,
+      accountType: user.accountType,
       accessToken: await this.jwtService.signAsync(payload),
     };
   }

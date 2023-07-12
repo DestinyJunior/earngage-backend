@@ -40,7 +40,7 @@ export class User {
   @Prop()
   tiktokHandle?: string;
 
-  @Prop({ unique: true, lowercase: true, trim: true })
+  @Prop({ unique: true, lowercase: true, trim: true, required: true })
   username?: string;
 
   @Prop({ required: false, lowercase: true })

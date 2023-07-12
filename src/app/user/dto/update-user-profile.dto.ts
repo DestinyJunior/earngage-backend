@@ -12,6 +12,7 @@ import {
 import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
 import { IsUniqueEmail } from '../pipes/is-unique-email.pipe';
 import { ERROR_CODE } from 'src/error/error-code.constants';
+import { IsUniqueUsername } from '../pipes/is-unique-username.pipe';
 /**
  * Dto for updating a user data
  */
@@ -33,6 +34,13 @@ export class UpdateUserProfile {
   @IsNotEmpty(requiredErrorMessage())
   @IsOptional()
   email: string;
+
+  @IsUniqueUsername(
+    validationErrorMessage('Field exists', ERROR_CODE.FIELD_EXISTS),
+  )
+  @IsNotEmpty(requiredErrorMessage())
+  @IsOptional()
+  username: string;
 
   @IsNotEmpty(requiredErrorMessage())
   @IsOptional()

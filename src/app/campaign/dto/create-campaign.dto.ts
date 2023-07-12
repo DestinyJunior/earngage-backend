@@ -11,7 +11,7 @@ export class CreateCampaignDto {
     validationErrorMessage('title already exists', ERROR_CODE.FIELD_LENGTH),
   )
   @Length(
-    10,
+    6,
     30,
     validationErrorMessage(
       'Field must be between 10 and 30 characters long',
@@ -23,7 +23,7 @@ export class CreateCampaignDto {
 
   @Length(
     10,
-    100,
+    30,
     validationErrorMessage(
       'Field must be between 10 and 100 characters long',
       ERROR_CODE.FIELD_LENGTH,
