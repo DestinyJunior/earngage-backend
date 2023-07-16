@@ -56,7 +56,7 @@ export class MulterConfigService implements MulterOptionsFactory {
       storage: multerS3({
         ...this.s3StorageService.getSaveFileParams(),
         // acl: 'read-public',
-        acl: 'public-read',
+        // acl: 'public-read',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         metadata(req, file, cb) {
           cb(null, { fieldName: file.fieldname });
