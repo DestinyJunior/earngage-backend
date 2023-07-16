@@ -197,6 +197,12 @@ export class CampaignService {
       { sampleVideos: getSampleVids._id },
     );
 
+    if (!campaign?.videos) {
+      await this.campaignRepository.update(campaign._id, {
+        videos: getSampleVids._id,
+      });
+    }
+
     if (sampleOneUploaded !== undefined && oldSampleOneKey !== undefined) {
       deleteFiles.push(
         this.awsS3StorageBucketService.deleteFile(oldSampleOneKey),
@@ -260,8 +266,12 @@ export class CampaignService {
     return await this.campaignRepository.findById(campaign._id);
   }
 
-  findAll() {
-    return this.campaignRepository.findAll();
+  findAllCreatorCampaigns(user: User, query: MgFilterQuery<Campaign>) {
+    return this.campaignRepository.findAll({ ...query, creator: user.id });
+  }
+
+  findAllCampaigns(query: MgFilterQuery<Campaign>) {
+    return this.campaignRepository.findAll(query);
   }
 
   findCreatorCampaigns(creator: User) {
@@ -279,7 +289,7 @@ export class CampaignService {
     return this.campaignRepository.update(id, updateCampaignDto);
   }
 
-  remove(id: string) {
-    return this.campaignRepository.remove(id);
+  remove(id: MongoTypes.ObjectId) {
+    return this.campaignRepository.delete(id);
   }
 }

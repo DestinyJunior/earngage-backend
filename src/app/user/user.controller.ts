@@ -20,7 +20,6 @@ import { DataParam } from 'src/decorator/data-param.decorator';
 import { JwtAuthGuard } from 'src/app/auth/guards/jwt-auth.guard';
 import { ReadOnePermissionGuard } from 'src/app/user/guards/read-one-permission.guard';
 import { UpdateUserProfile } from 'src/app/user/dto/update-user-profile.dto';
-import { UpdateUserPermissionGuard } from 'src/app/user/guards/update-user-permission.guard';
 import { UpdateUserPhotosDto } from 'src/app/user/dto/update-user-photos.dto';
 import { UserParam } from 'src/decorator/user-param.decorator';
 import { SetUserAccountTypeDto } from './dto/create-user-type.dto';

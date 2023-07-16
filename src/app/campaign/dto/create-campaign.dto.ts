@@ -12,9 +12,9 @@ export class CreateCampaignDto {
   )
   @Length(
     6,
-    30,
+    50,
     validationErrorMessage(
-      'Field must be between 10 and 30 characters long',
+      'Field must be between 6 and 50 characters long',
       ERROR_CODE.FIELD_LENGTH,
     ),
   )

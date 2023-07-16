@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { CampaignService } from './campaign.service';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
@@ -22,7 +23,7 @@ import { User } from '../user/schemas/user.schema';
 import { CreatedCampaignDto } from './dto/created-campaign.dto';
 import { CreateCampaignUploadDto } from '../campaign-uploads/dto/create-campaign-upload.dto';
 import { DataParam } from 'src/decorator/data-param.decorator';
-import { CampaignWithId } from './schemas/campaign.schema';
+import { Campaign, CampaignWithId } from './schemas/campaign.schema';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UpdateUploadFilesDto } from '../campaign-uploads/dto/create-upload-files.dto';
 import { CampaignExistsGuard } from './guards/is-campaign-exists.guard';
@@ -31,6 +32,8 @@ import { Types as MongoTypes } from 'mongoose';
 import { CreateCampaignSampleVideosDto } from 'src/app/campaign-sample-videos/dto/create-campaign-sample-video.dto';
 import { UpdateSampleVideoFilesDto } from 'src/app/campaign-sample-videos/dto/create-sample-videos-files.dto';
 import { CampaignUploadsExistsGuard } from './guards/is-campaign-upload-exists.guard';
+import { CreateCampaignBudgetDto } from '../campaign-budget/dto/create-campaign-budget.dto';
+import { MgFilterQuery } from 'src/types/mongoose.types';
 
 @Controller('campaign')
 export class CampaignController {
@@ -133,9 +136,44 @@ export class CampaignController {
     );
   }
 
+  @Post('add-budget/:campaignId')
+  @UseGuards(
+    UserExistsGuard,
+    JwtAuthGuard,
+    CreateCampaignPermissionGuard,
+    CampaignExistsGuard,
+    CampaignUploadsExistsGuard,
+  )
+  async addBudget(
+    @DataParam('campaign') campaign: CampaignWithId,
+    @Body() createCampaignBudget: CreateCampaignBudgetDto,
+  ) {
+    const result = await this.campaignService.addBudget(
+      campaign,
+      createCampaignBudget,
+    );
+
+    return ResponseDto.success(
+      'campaign budget added, proceed to publish',
+      this.entityMapperService.entityToDto(CreatedCampaignDto, result),
+    );
+  }
+
   @Get()
-  findAll() {
-    return this.campaignService.findAll();
+  @UseGuards(UserExistsGuard, JwtAuthGuard, CreateCampaignPermissionGuard)
+  async findAllCreatorCampaigns(
+    @UserParam() user: User,
+    @Query() query: MgFilterQuery<Campaign>,
+  ) {
+    const campaigns = await this.campaignService.findAllCreatorCampaigns(
+      user,
+      query,
+    );
+
+    return ResponseDto.success(
+      'Campaign data fetched',
+      this.entityMapperService.entityToDto(CreatedCampaignDto, campaigns),
+    );
   }
 
   @Get(':campaignId')
@@ -145,8 +183,15 @@ export class CampaignController {
     CreateCampaignPermissionGuard,
     CampaignExistsGuard,
   )
-  findOne(@Param('campaignId') campaignId: string) {
-    return this.campaignService.findOne(new MongoTypes.ObjectId(campaignId));
+  async findOne(@Param('campaignId') campaignId: string) {
+    const campaign = await this.campaignService.findOne(
+      new MongoTypes.ObjectId(campaignId),
+    );
+
+    return ResponseDto.success(
+      'Campaign data fetched',
+      this.entityMapperService.entityToDto(CreatedCampaignDto, campaign),
+    );
   }
 
   @Patch(':campaignId')
@@ -156,13 +201,18 @@ export class CampaignController {
     CreateCampaignPermissionGuard,
     CampaignExistsGuard,
   )
-  update(
+  async update(
     @Param('campaignId') campaignId: string,
     @Body() updateCampaignDto: UpdateCampaignDto,
   ) {
-    return this.campaignService.updateCampaignDetails(
+    const campaign = await this.campaignService.updateCampaignDetails(
       new MongoTypes.ObjectId(campaignId),
       updateCampaignDto,
+    );
+
+    return ResponseDto.success(
+      'Campaign data updated',
+      this.entityMapperService.entityToDto(CreatedCampaignDto, campaign),
     );
   }
 
@@ -173,7 +223,9 @@ export class CampaignController {
     CreateCampaignPermissionGuard,
     CampaignExistsGuard,
   )
-  remove(@Param('campaignId') campaignId: string) {
-    return this.campaignService.remove(campaignId);
+  async remove(@Param('campaignId') campaignId: string) {
+    await this.campaignService.remove(new MongoTypes.ObjectId(campaignId));
+
+    return ResponseDto.success('Campaign data deleted');
   }
 }
