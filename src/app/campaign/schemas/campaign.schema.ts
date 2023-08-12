@@ -13,6 +13,26 @@ export enum CAMPAIGN_STATUS {
   CLOSED = 'Closed',
 }
 
+//:TODO:/ TBD
+export class CampaignImpressionsData {
+  @Prop({ type: [MongoTypes.ObjectId] })
+  viewed?: MongoTypes.ObjectId[];
+
+  @Prop({ type: [MongoTypes.ObjectId] })
+  watched?: MongoTypes.ObjectId[];
+
+  @Prop({ type: [MongoTypes.ObjectId] })
+  reached: MongoTypes.ObjectId[];
+}
+
+class CampaignTimeLine {
+  @Prop({ type: Date, default: Date.now() })
+  startDate?: Date;
+
+  @Prop({ required: true, type: Date, default: Date.now() })
+  endDate?: Date;
+}
+
 @Schema({ timestamps: true })
 export class Campaign {
   @Prop({ required: true, ref: User.name, type: MongoTypes.ObjectId })
@@ -69,6 +89,12 @@ export class Campaign {
     type: MongoTypes.ObjectId,
   })
   budget?: MongoTypes.ObjectId;
+
+  @Prop({ required: false, type: CampaignTimeLine })
+  timeline?: CampaignTimeLine;
+
+  @Prop({ type: [String], required: false })
+  tags?: string[];
 }
 
 export class CampaignWithId extends Campaign {

@@ -13,6 +13,7 @@ declare namespace Express {
       admin: import('./app/admin/schemas/admin.schema').AdminDocument;
       media: import('./app/file-upload/schemas/file.schema').PhotoDocument;
       campaign: import('./app/campaign/schemas/campaign.schema').CampaignDocument;
+      submission: import('./app/submissions/schemas/submission.schema').CampaignDocument;
     };
   }
 }

@@ -7,4 +7,5 @@ export class CreatedCampaignDto extends SchemaDto {
   campaignGoal: string;
   instructions: string;
   medium: string;
+  tags: string[];
 }

@@ -4,6 +4,7 @@ import { MediaFile } from 'src/app/file-upload/schemas/file.schema';
 import { UserType } from './user-type.enum';
 import { PhoneNumberField } from './phone-number.schema';
 import { GenerateOptions } from 'randomstring';
+import { Types as MongoTypes } from 'mongoose';
 
 /**
  * Enum of user status
@@ -60,6 +61,10 @@ export class User {
 
   @Prop({ default: UserType.NONE })
   accountType: UserType;
+}
+
+export class UserWithId extends User {
+  _id: MongoTypes.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

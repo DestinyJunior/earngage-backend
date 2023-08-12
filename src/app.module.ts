@@ -23,6 +23,8 @@ import { HashService } from './service/hash/hash.service';
 import { EntityMapperService } from './service/entity-mapper/entity-mapper.service';
 import { AuthModule } from './app/auth/auth.module';
 import { CampaignSampleVideosModule } from './app/campaign-sample-videos/campaign-sample-videos.module';
+import { SubmissionsModule } from './app/submissions/submissions.module';
+import { ThreadsModule } from './app/threads/threads.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { CampaignSampleVideosModule } from './app/campaign-sample-videos/campaig
     WalletModule,
     AuthModule,
     CampaignSampleVideosModule,
+    SubmissionsModule,
+    ThreadsModule,
   ],
   controllers: [AppController],
   providers: [

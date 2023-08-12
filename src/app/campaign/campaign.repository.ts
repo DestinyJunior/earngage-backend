@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Campaign, CampaignDocument } from './schemas/campaign.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types as MongoTypes, UpdateQuery } from 'mongoose';
+import {
+  Model,
+  Types as MongoTypes,
+  QueryOptions,
+  UpdateQuery,
+} from 'mongoose';
 import { MgFilterQuery } from 'src/types/mongoose.types';
 import { CampaignSampleVideos } from '../campaign-sample-videos/schemas/sample-videos.schema';
 
@@ -18,6 +23,29 @@ export class CampaignRepository {
 
   create(createCampaignDto: Campaign) {
     return this.campaignModel.create(createCampaignDto);
+  }
+
+  findAllPublished(params: MgFilterQuery<Campaign>, options: QueryOptions) {
+    // change to aggregate later
+    return this.campaignModel
+      .find(params)
+      .sort('-createdAt')
+      .skip(options?.skip)
+      .limit(options?.limit)
+      .populate([
+        {
+          path: 'creator',
+          select: 'tiktokHandle username photo',
+        },
+        {
+          path: 'uploads',
+          populate: { path: 'sampleVideos', model: CampaignSampleVideos.name },
+        },
+        {
+          path: 'videos',
+        },
+        { path: 'budget' },
+      ]);
   }
 
   findAll(params?: MgFilterQuery<Campaign>) {
@@ -53,7 +81,7 @@ export class CampaignRepository {
     ]);
   }
 
-  update(id: MongoTypes.ObjectId, payload: UpdateQuery<Campaign>) {
+  updateOne(id: MongoTypes.ObjectId, payload: UpdateQuery<Campaign>) {
     return this.campaignModel.findByIdAndUpdate(id, payload);
   }
 

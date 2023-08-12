@@ -1,4 +1,4 @@
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsArray, IsNotEmpty, Length } from 'class-validator';
 import { ERROR_CODE } from 'src/error/error-code.constants';
 import {
   requiredErrorMessage,
@@ -51,4 +51,8 @@ export class CreateCampaignDto {
 
   @IsNotEmpty(requiredErrorMessage())
   medium: string;
+
+  @IsNotEmpty(requiredErrorMessage())
+  @IsArray()
+  tags?: string[];
 }

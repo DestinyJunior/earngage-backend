@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
 import { CampaignRepository } from './campaign.repository';
@@ -20,6 +20,8 @@ import { CreateCampaignSampleVideosDto } from 'src/app/campaign-sample-videos/dt
 import { UpdateSampleVideoFilesDto } from 'src/app/campaign-sample-videos/dto/create-sample-videos-files.dto';
 import { CampaignBudgetRepository } from '../campaign-budget/campaign-budget.repository';
 import { CreateCampaignBudgetDto } from '../campaign-budget/dto/create-campaign-budget.dto';
+import { ResponseDto } from 'src/dto/response.dto';
+import { UpdateEndDateDto } from './dto/update-date.dto';
 
 @Injectable()
 export class CampaignService {
@@ -85,7 +87,7 @@ export class CampaignService {
     );
 
     if (!campaign?.uploads) {
-      await this.campaignRepository.update(campaign._id, {
+      await this.campaignRepository.updateOne(campaign._id, {
         uploads: getUploads._id,
       });
     }
@@ -198,7 +200,7 @@ export class CampaignService {
     );
 
     if (!campaign?.videos) {
-      await this.campaignRepository.update(campaign._id, {
+      await this.campaignRepository.updateOne(campaign._id, {
         videos: getSampleVids._id,
       });
     }
@@ -258,7 +260,7 @@ export class CampaignService {
     );
 
     if (!campaign?.budget) {
-      await this.campaignRepository.update(campaign._id, {
+      await this.campaignRepository.updateOne(campaign._id, {
         budget: getBudget._id,
       });
     }
@@ -267,26 +269,70 @@ export class CampaignService {
   }
 
   findAllCreatorCampaigns(user: User, query: MgFilterQuery<Campaign>) {
-    return this.campaignRepository.findAll({ ...query, creator: user.id });
+    return this.campaignRepository.findAll({
+      ...query,
+      creator: new MongoTypes.ObjectId(user.id),
+    });
   }
 
   findAllCampaigns(query: MgFilterQuery<Campaign>) {
     return this.campaignRepository.findAll(query);
   }
 
-  findCreatorCampaigns(creator: User) {
-    return this.campaignRepository.findAll({ creator: creator.id });
+  findAllCampaignsFiltered(query: MgFilterQuery<Campaign>) {
+    const { limit = 6, page = 1 } = query;
+
+    const recordLimit = parseInt(limit?.toString());
+    const skip = recordLimit * (parseInt(page.toString()) - 1);
+    const options = {
+      status: CAMPAIGN_STATUS.PUBLISHED,
+    };
+
+    const campaigns = this.campaignRepository.findAllPublished(options, {
+      limit: recordLimit,
+      skip,
+    });
+
+    return campaigns;
   }
+
+  // findCreatorCampaigns(creator: User) {
+  //   return this.campaignRepository.findAll({
+  //     creator: new MongoTypes.ObjectId(creator.id),
+  //     ...query,
+  //   });
+  // }
 
   findOne(params: MgFilterQuery<Campaign>) {
     return this.campaignRepository.findOne(params);
+  }
+
+  async changeEndDate(
+    id: MongoTypes.ObjectId,
+    campaign: Pick<CampaignWithId, 'status'>,
+    changeDateDto: UpdateEndDateDto,
+  ) {
+    if (campaign.status !== CAMPAIGN_STATUS.PUBLISHED) {
+      throw new BadRequestException(ResponseDto.error('cannot change date'));
+    }
+
+    return await this.campaignRepository.updateOne(id, {
+      timeline: changeDateDto,
+    });
+  }
+
+  async publishCampaign(id: MongoTypes.ObjectId) {
+    //:TODO:// make checks (wallet, uploads etc before publish)
+    return await this.campaignRepository.updateOne(id, {
+      status: CAMPAIGN_STATUS.PUBLISHED,
+    });
   }
 
   updateCampaignDetails(
     id: MongoTypes.ObjectId,
     updateCampaignDto: UpdateCampaignDto,
   ) {
-    return this.campaignRepository.update(id, updateCampaignDto);
+    return this.campaignRepository.updateOne(id, updateCampaignDto);
   }
 
   remove(id: MongoTypes.ObjectId) {

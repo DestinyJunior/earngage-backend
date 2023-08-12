@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFiles,
   Query,
+  Put,
 } from '@nestjs/common';
 import { CampaignService } from './campaign.service';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
@@ -34,6 +35,7 @@ import { UpdateSampleVideoFilesDto } from 'src/app/campaign-sample-videos/dto/cr
 import { CampaignUploadsExistsGuard } from './guards/is-campaign-upload-exists.guard';
 import { CreateCampaignBudgetDto } from '../campaign-budget/dto/create-campaign-budget.dto';
 import { MgFilterQuery } from 'src/types/mongoose.types';
+import { UpdateEndDateDto } from './dto/update-date.dto';
 
 @Controller('campaign')
 export class CampaignController {
@@ -41,6 +43,18 @@ export class CampaignController {
     private readonly campaignService: CampaignService,
     private readonly entityMapperService: EntityMapperService,
   ) {}
+
+  @Get('published')
+  async getCampaignsPublished(@Query() query: MgFilterQuery<Campaign>) {
+    const campaigns = await this.campaignService.findAllCampaignsFiltered(
+      query,
+    );
+
+    return ResponseDto.success(
+      'campaigns fetched',
+      this.entityMapperService.entityToDto(CreatedCampaignDto, campaigns),
+    );
+  }
 
   @Post()
   @UseGuards(UserExistsGuard, JwtAuthGuard, CreateCampaignPermissionGuard)
@@ -184,9 +198,9 @@ export class CampaignController {
     CampaignExistsGuard,
   )
   async findOne(@Param('campaignId') campaignId: string) {
-    const campaign = await this.campaignService.findOne(
-      new MongoTypes.ObjectId(campaignId),
-    );
+    const campaign = await this.campaignService.findOne({
+      _id: new MongoTypes.ObjectId(campaignId),
+    });
 
     return ResponseDto.success(
       'Campaign data fetched',
@@ -212,6 +226,48 @@ export class CampaignController {
 
     return ResponseDto.success(
       'Campaign data updated',
+      this.entityMapperService.entityToDto(CreatedCampaignDto, campaign),
+    );
+  }
+
+  @Put(':campaignId/publish')
+  @UseGuards(
+    UserExistsGuard,
+    JwtAuthGuard,
+    CreateCampaignPermissionGuard,
+    CampaignExistsGuard,
+  )
+  async publishCampaign(@Param('campaignId') campaignId: string) {
+    const campaign = await this.campaignService.publishCampaign(
+      new MongoTypes.ObjectId(campaignId),
+    );
+
+    return ResponseDto.success(
+      'Campaign published',
+      this.entityMapperService.entityToDto(CreatedCampaignDto, campaign),
+    );
+  }
+
+  @Patch(':campaignId/change-date')
+  @UseGuards(
+    UserExistsGuard,
+    JwtAuthGuard,
+    CreateCampaignPermissionGuard,
+    CampaignExistsGuard,
+  )
+  async changeEndDate(
+    @Param('campaignId') campaignId: string,
+    @DataParam('campaign') campaign: CampaignWithId,
+    @Body() changeDateDto: UpdateEndDateDto,
+  ) {
+    await this.campaignService.changeEndDate(
+      new MongoTypes.ObjectId(campaignId),
+      campaign,
+      changeDateDto,
+    );
+
+    return ResponseDto.success(
+      'Campaign published',
       this.entityMapperService.entityToDto(CreatedCampaignDto, campaign),
     );
   }
