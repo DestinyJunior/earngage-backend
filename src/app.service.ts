@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getServerHello(): Record<string, string> {
+    return {
+      AppName: 'Earngage Api',
+      Version: '0.1',
+      Documentation: 'api/docs',
+    };
   }
 }
